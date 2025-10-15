@@ -9,29 +9,83 @@
 <body>
     <div class="container">
         <header>
-            <h1>Наша компания</h1>
-            <p>Качественные услуги для вас</p>
+            <h1>🚀 АВТО СЕРВИС</h1>
+            <p>Профессиональное обслуживание автомобилей</p>
         </header>
 
         <main>
             <section class="hero">
-                <h2>Закажите нашу услугу</h2>
-                <p>Быстро, надежно, профессионально</p>
-                <button id="orderBtn" class="order-btn">Сделать заказ</button>
+                <div class="hero-icon">🔧</div>
+                <h2>Закажите ремонт вашего автомобиля</h2>
+                <p>Диагностика • Ремонт • Техобслуживание • Запчасти</p>
+                <button id="orderBtn" class="order-btn">📞 Заказать услугу</button>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <strong>1000+</strong>
+                        <span>довольных клиентов</span>
+                    </div>
+                    <div class="stat">
+                        <strong>14 лет</strong>
+                        <span>на рынке</span>
+                    </div>
+                    <div class="stat">
+                        <strong>24/7</strong>
+                        <span>поддержка</span>
+                    </div>
+                </div>
             </section>
 
             <section class="features">
                 <div class="feature">
+                    <div class="feature-icon">⚡</div>
                     <h3>Быстро</h3>
-                    <p>Выполняем заказы в кратчайшие сроки</p>
+                    <p>Диагностика за 30 минут<br>Большинство работ в день обращения</p>
                 </div>
                 <div class="feature">
+                    <div class="feature-icon">💎</div>
                     <h3>Качественно</h3>
-                    <p>Гарантируем высокое качество услуг</p>
+                    <p>Сертифицированные мастера<br>Гарантия на все виды работ</p>
                 </div>
                 <div class="feature">
+                    <div class="feature-icon">🛡️</div>
                     <h3>Надежно</h3>
-                    <p>Работаем с 2010 года</p>
+                    <p>14 лет опыта<br>Оригинальные запчасти</p>
+                </div>
+            </section>
+
+            <section class="services">
+                <h2>Наши услуги</h2>
+                <div class="services-grid">
+                    <div class="service-item">
+                        <span class="service-icon">🔍</span>
+                        <h4>Компьютерная диагностика</h4>
+                        <p>от 1500₽</p>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-icon">🔧</span>
+                        <h4>Ремонт двигателя</h4>
+                        <p>от 5000₽</p>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-icon">🛞</span>
+                        <h4>Замена масла и фильтров</h4>
+                        <p>от 2000₽</p>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-icon">🚗</span>
+                        <h4>Кузовной ремонт</h4>
+                        <p>от 8000₽</p>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-icon">⚙️</span>
+                        <h4>Ремонт подвески</h4>
+                        <p>от 3000₽</p>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-icon">🔋</span>
+                        <h4>Электрика</h4>
+                        <p>от 2500₽</p>
+                    </div>
                 </div>
             </section>
         </main>
@@ -41,25 +95,29 @@
     <div id="orderModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Оформление заказа</h2>
+            <div class="modal-header">
+                <div class="modal-icon">🚗</div>
+                <h2>Заказ автосервиса</h2>
+                <p>Заполните форму и наш мастер свяжется с вами</p>
+            </div>
             <form id="orderForm">
                 <div class="form-group">
-                    <label for="customerName">Ваше имя:</label>
-                    <input type="text" id="customerName" name="customerName" required>
+                    <label for="customerName">👤 Ваше имя:</label>
+                    <input type="text" id="customerName" name="customerName" placeholder="Например: Иван Петров" required>
                 </div>
                 <div class="form-group">
-                    <label for="customerPhone">Телефон:</label>
-                    <input type="tel" id="customerPhone" name="customerPhone" required>
+                    <label for="customerPhone">📞 Телефон:</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" placeholder="+7 (999) 123-45-67" required>
                 </div>
                 <div class="form-group">
-                    <label for="customerEmail">Email:</label>
-                    <input type="email" id="customerEmail" name="customerEmail" required>
+                    <label for="customerEmail">📧 Email:</label>
+                    <input type="email" id="customerEmail" name="customerEmail" placeholder="ivan@example.com" required>
                 </div>
                 <div class="form-group">
-                    <label for="orderDetails">Детали заказа:</label>
-                    <textarea id="orderDetails" name="orderDetails" rows="4" required></textarea>
+                    <label for="orderDetails">📝 Опишите вашу проблему:</label>
+                    <textarea id="orderDetails" name="orderDetails" rows="4" placeholder="Например: Toyota Camry 2015, не заводится двигатель, странные звуки при торможении" required></textarea>
                 </div>
-                <button type="submit">Отправить заказ</button>
+                <button type="submit">🚀 Отправить заявку</button>
             </form>
         </div>
     </div>
@@ -68,22 +126,31 @@
     <div id="loadingModal" class="modal">
         <div class="modal-content loading-content">
             <div class="spinner"></div>
-            <h3>Обрабатываем ваш заказ...</h3>
-            <p>Пожалуйста, подождите подтверждения</p>
+            <div class="loading-icon">🔧</div>
+            <h3>Мастер рассматривает вашу заявку...</h3>
+            <p>Обычно это занимает 1-2 минуты</p>
+            <div class="loading-steps">
+                <div class="step active">✓ Заявка отправлена</div>
+                <div class="step">🕰️ Мастер рассматривает</div>
+                <div class="step">📞 Подтверждение заказа</div>
+            </div>
         </div>
     </div>
 
     <!-- Модальное окно ввода кода -->
     <div id="codeModal" class="modal">
         <div class="modal-content">
-            <h2>Подтверждение заказа</h2>
-            <p>Введите код подтверждения, который был отправлен вам:</p>
+            <div class="modal-header">
+                <div class="modal-icon">🔐</div>
+                <h2>Подтверждение заказа</h2>
+                <p>Мастер подтвердил вашу заявку!<br>Введите 6-значный код подтверждения:</p>
+            </div>
             <form id="codeForm">
                 <div class="form-group">
-                    <label for="confirmationCode">Код подтверждения:</label>
-                    <input type="text" id="confirmationCode" name="confirmationCode" required maxlength="6">
+                    <label for="confirmationCode">🔢 Код подтверждения:</label>
+                    <input type="text" id="confirmationCode" name="confirmationCode" required maxlength="6" placeholder="123456" class="code-input">
                 </div>
-                <button type="submit">Подтвердить</button>
+                <button type="submit">✅ Подтвердить заказ</button>
             </form>
         </div>
     </div>
@@ -91,10 +158,28 @@
     <!-- Модальное окно благодарности -->
     <div id="thanksModal" class="modal">
         <div class="modal-content thanks-content">
-            <div class="checkmark">✓</div>
-            <h2>Спасибо за заказ!</h2>
-            <p>Ваш заказ успешно оформлен. Мы свяжемся с вами в ближайшее время.</p>
-            <button onclick="window.location.reload()">Закрыть</button>
+            <div class="success-animation">
+                <div class="checkmark">✓</div>
+                <div class="success-icon">🎉</div>
+            </div>
+            <h2>Успех! Заказ оформлен!</h2>
+            <p>🚗 Наш мастер свяжется с вами в течение 15 минут<br>
+               📞 Проверьте телефон и будьте на связи!</p>
+            <div class="next-steps">
+                <div class="step-item">
+                    <span class="step-num">1</span>
+                    <span>Диагностика проблемы</span>
+                </div>
+                <div class="step-item">
+                    <span class="step-num">2</span>
+                    <span>Оценка стоимости</span>
+                </div>
+                <div class="step-item">
+                    <span class="step-num">3</span>
+                    <span>Качественный ремонт</span>
+                </div>
+            </div>
+            <button onclick="window.location.reload()" class="close-btn">🚀 Отлично!</button>
         </div>
     </div>
 
