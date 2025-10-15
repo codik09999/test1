@@ -1,278 +1,345 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POLBUS - Билеты на автобус в Польшу</title>
+    <title>FlixBus: tanie bilety autobusowe online</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header Navigation -->
-    <header class="main-header">
-        <div class="header-container">
-            <div class="logo">
-                <span class="logo-text">FlixBus</span>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <svg width="79" height="18" viewBox="0 0 79 18" fill="none">
+                    <path d="M0 0h79v18H0z" fill="#73D700"/>
+                    <text x="10" y="13" font-family="Arial" font-size="14" font-weight="bold" fill="white">FlixBus</text>
+                </svg>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="#" class="nav-item">Szukaj</a>
+                <a href="#" class="nav-item">Moje podróże</a>
+                <a href="#" class="nav-item">Pomoc</a>
             </div>
-            <nav class="main-nav">
-                <a href="#">Поиск билетов</a>
-                <a href="#">Мои поездки</a>
-                <a href="#">Помощь</a>
-            </nav>
-            <div class="header-actions">
-                <button class="language-btn">RU</button>
-                <button class="login-btn">Войти</button>
+            
+            <div class="nav-actions">
+                <div class="language-selector">
+                    <button class="lang-btn">PL 🇵🇱</button>
+                </div>
+                <a href="#" class="login-btn">Zaloguj się</a>
+                <button class="mobile-menu-btn">☰</button>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main>
-        <!-- Hero Section with Search -->
-        <section class="hero-section">
-            <div class="hero-container">
-                <div class="hero-content">
-                    <h1>Найдите и забронируйте автобусные билеты</h1>
-                    <p class="hero-subtitle">Лучшие цены на поездки по Европе</p>
-                </div>
+    <!-- Hero Section with Search -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-content">
+                <h1 class="hero-title">Znajdź i zarezerwuj bilety autobusowe</h1>
+                <p class="hero-subtitle">Najlepsze ceny na podróże po Europie</p>
                 
                 <!-- Search Form -->
-                <div class="search-form-container">
+                <div class="search-widget">
                     <div class="search-form">
-                        <div class="form-row">
-                            <div class="form-group from-to">
-                                <div class="input-group">
-                                    <label>Откуда</label>
-                                    <input type="text" placeholder="Москва" class="search-input">
+                        <div class="trip-type">
+                            <label class="radio-option active">
+                                <input type="radio" name="trip" value="oneway" checked>
+                                <span>W jedną stronę</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="trip" value="return">
+                                <span>Powrót</span>
+                            </label>
+                        </div>
+                        
+                        <div class="search-inputs">
+                            <div class="input-group from-to-group">
+                                <div class="search-input-wrapper">
+                                    <label>Skąd</label>
+                                    <input type="text" placeholder="np. Warszawa" class="search-input from-input">
+                                    <span class="input-icon">📍</span>
                                 </div>
-                                <button class="swap-btn">⇄</button>
-                                <div class="input-group">
-                                    <label>Куда</label>
-                                    <input type="text" placeholder="Варшава" class="search-input">
+                                
+                                <button class="swap-locations">⇄</button>
+                                
+                                <div class="search-input-wrapper">
+                                    <label>Dokąd</label>
+                                    <input type="text" placeholder="np. Berlin" class="search-input to-input">
+                                    <span class="input-icon">📍</span>
                                 </div>
                             </div>
-                            <div class="form-group date-group">
-                                <label>Отправление</label>
+                            
+                            <div class="search-input-wrapper date-wrapper">
+                                <label>Odjazd</label>
                                 <input type="date" class="search-input date-input">
+                                <span class="input-icon">📅</span>
                             </div>
-                            <div class="form-group passengers">
-                                <label>Пассажиры</label>
-                                <select class="search-input">
-                                    <option>1 Пассажир</option>
-                                    <option>2 Пассажира</option>
-                                    <option>3+ Пассажиров</option>
+                            
+                            <div class="search-input-wrapper passengers-wrapper">
+                                <label>Pasażerowie</label>
+                                <select class="search-input passengers-input">
+                                    <option>1 Pasażer</option>
+                                    <option>2 Pasażerów</option>
+                                    <option>3 Pasażerów</option>
+                                    <option>4+ Pasażerów</option>
                                 </select>
+                                <span class="input-icon">👤</span>
                             </div>
-                            <button id="orderBtn" class="search-btn">Поиск</button>
+                            
+                            <button id="orderBtn" class="search-btn">
+                                <span>Szukaj</span>
+                                <span class="btn-icon">🔍</span>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Popular Destinations -->
-        <section class="popular-destinations">
-            <div class="container">
-                <h2>Популярные направления</h2>
-                <div class="destinations-grid">
-                    <div class="destination-card">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="Варшава">
-                        <div class="destination-info">
-                            <h3>Варшава</h3>
-                            <p>от 2500 ₽</p>
-                        </div>
+    <!-- Popular Destinations -->
+    <section class="popular-routes">
+        <div class="container">
+            <h2 class="section-title">Popularne trasy</h2>
+            <div class="routes-grid">
+                <div class="route-card">
+                    <div class="route-image">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='160' viewBox='0 0 280 160'%3E%3Crect width='280' height='160' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial' font-size='16' fill='%23666'%3EWarszawa%3C/text%3E%3C/svg%3E" alt="Warszawa">
                     </div>
-                    <div class="destination-card">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="Краков">
-                        <div class="destination-info">
-                            <h3>Краков</h3>
-                            <p>от 1800 ₽</p>
-                        </div>
+                    <div class="route-info">
+                        <h3 class="route-destination">Warszawa</h3>
+                        <p class="route-price">od 45 zł</p>
+                        <p class="route-description">Stolica Polski • 120+ połączeń dziennie</p>
                     </div>
-                    <div class="destination-card">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="Люблин">
-                        <div class="destination-info">
-                            <h3>Люблин</h3>
-                            <p>от 1500 ₽</p>
-                        </div>
+                </div>
+                
+                <div class="route-card">
+                    <div class="route-image">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='160' viewBox='0 0 280 160'%3E%3Crect width='280' height='160' fill='%23e8e8e8'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial' font-size='16' fill='%23666'%3EKraków%3C/text%3E%3C/svg%3E" alt="Kraków">
                     </div>
-                    <div class="destination-card">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="Гданьск">
-                        <div class="destination-info">
-                            <h3>Гданьск</h3>
-                            <p>от 3200 ₽</p>
-                        </div>
+                    <div class="route-info">
+                        <h3 class="route-destination">Kraków</h3>
+                        <p class="route-price">od 35 zł</p>
+                        <p class="route-description">Miasto Królów • 80+ połączeń dziennie</p>
+                    </div>
+                </div>
+                
+                <div class="route-card">
+                    <div class="route-image">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='160' viewBox='0 0 280 160'%3E%3Crect width='280' height='160' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial' font-size='16' fill='%23666'%3EGdańsk%3C/text%3E%3C/svg%3E" alt="Gdańsk">
+                    </div>
+                    <div class="route-info">
+                        <h3 class="route-destination">Gdańsk</h3>
+                        <p class="route-price">od 55 zł</p>
+                        <p class="route-description">Perła Bałtyku • 60+ połączeń dziennie</p>
+                    </div>
+                </div>
+                
+                <div class="route-card">
+                    <div class="route-image">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='160' viewBox='0 0 280 160'%3E%3Crect width='280' height='160' fill='%23eee'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial' font-size='14' fill='%23666'%3EWrocław%3C/text%3E%3C/svg%3E" alt="Wrocław">
+                    </div>
+                    <div class="route-info">
+                        <h3 class="route-destination">Wrocław</h3>
+                        <p class="route-price">od 40 zł</p>
+                        <p class="route-description">Miasto Mostów • 70+ połączeń dziennie</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Features Section -->
-        <section class="features-section">
-            <div class="container">
-                <div class="features-grid">
-                    <div class="feature">
-                        <div class="feature-icon">💰</div>
-                        <h3>Лучшие цены</h3>
-                        <p>Мы сравниваем цены со всеми перевозчиками и предлагаем самые выгодные варианты.</p>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">🌍</div>
-                        <h3>По всей Европе</h3>
-                        <p>Более 2500 направлений по 35 странам Европы. Путешествуйте легко и удобно.</p>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">📱</div>
-                        <h3>Простое бронирование</h3>
-                        <p>Бронируйте за несколько кликов на сайте или в мобильном приложении.</p>
-                    </div>
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <h3>Najlepsze ceny</h3>
+                    <p>Porównujemy ceny ze wszystkimi przewoźnikami i oferujemy najkorzystniejsze opcje podróży.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Cała Europa</h3>
+                    <p>Ponad 2500 kierunków w 37 krajach. Podróżuj wygodnie i bezpiecznie po całym kontynencie.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Łatwa rezerwacja</h3>
+                    <p>Zarezerwuj w kilka kliknięć na stronie internetowej lub w aplikacji mobilnej.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Mobile App Section -->
-        <section class="app-section">
-            <div class="container">
-                <div class="app-content">
-                    <div class="app-info">
-                        <h2>Получите приложение FlixBus</h2>
-                        <p>Бронируйте поездки на ходу, отслеживайте автобусы в реальном времени и получайте эксклюзивные предложения.</p>
-                        <div class="app-stores">
-                            <button class="store-btn">App Store</button>
-                            <button class="store-btn">Google Play</button>
-                        </div>
+    <!-- Mobile App Promotion -->
+    <section class="app-promo">
+        <div class="container">
+            <div class="app-content">
+                <div class="app-text">
+                    <h2>Pobierz aplikację FlixBus</h2>
+                    <p>Rezerwuj podróże w drodze, śledź autobusy na żywo i otrzymuj ekskluzywne oferty.</p>
+                    <div class="app-badges">
+                        <a href="#" class="app-badge ios">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Crect width='120' height='40' rx='5' fill='%23000'/%3E%3Ctext x='60' y='25' text-anchor='middle' fill='white' font-size='12'%3EApp Store%3C/text%3E%3C/svg%3E" alt="App Store">
+                        </a>
+                        <a href="#" class="app-badge android">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Crect width='120' height='40' rx='5' fill='%23000'/%3E%3Ctext x='60' y='25' text-anchor='middle' fill='white' font-size='12'%3EGoogle Play%3C/text%3E%3C/svg%3E" alt="Google Play">
+                        </a>
                     </div>
-                    <div class="app-image">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23e8e8e8'/%3E%3C/svg%3E" alt="Мобильное приложение">
+                </div>
+                <div class="app-visual">
+                    <div class="phone-mockup">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='400' viewBox='0 0 200 400'%3E%3Crect width='200' height='400' rx='25' fill='%23333'/%3E%3Crect x='10' y='30' width='180' height='340' rx='15' fill='%2373D700'/%3E%3Ctext x='100' y='200' text-anchor='middle' fill='white' font-size='16'%3EFlixBus%3C/text%3E%3C/svg%3E" alt="FlixBus App">
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="main-footer">
+    <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>FlixBus</h4>
                     <ul>
-                        <li><a href="#">О компании</a></li>
-                        <li><a href="#">Карьера</a></li>
-                        <li><a href="#">Пресс-центр</a></li>
+                        <li><a href="#">O nas</a></li>
+                        <li><a href="#">Kariera</a></li>
+                        <li><a href="#">Prasa</a></li>
+                        <li><a href="#">Blog</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Помощь</h4>
+                    <h4>Serwis</h4>
                     <ul>
-                        <li><a href="#">ЧАВО</a></li>
-                        <li><a href="#">Контакты</a></li>
-                        <li><a href="#">Подать жалобу</a></li>
+                        <li><a href="#">Centrum pomocy</a></li>
+                        <li><a href="#">Kontakt</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Reklamacje</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Путешествия</h4>
+                    <h4>Podróże</h4>
                     <ul>
-                        <li><a href="#">Направления</a></li>
-                        <li><a href="#">Популярные маршруты</a></li>
-                        <li><a href="#">Подарочные карты</a></li>
+                        <li><a href="#">Kierunki</a></li>
+                        <li><a href="#">Popularne trasy</a></li>
+                        <li><a href="#">Karty podarunkowe</a></li>
+                        <li><a href="#">Przewodnik</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Firma</h4>
+                    <ul>
+                        <li><a href="#">Regulamin</a></li>
+                        <li><a href="#">Polityka prywatności</a></li>
+                        <li><a href="#">Impressum</a></li>
+                        <li><a href="#">Współpraca</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 FlixBus. Все права защищены.</p>
+                <div class="footer-social">
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">YouTube</a>
+                </div>
+                <div class="footer-legal">
+                    <span>© 2024 FlixBus. Wszelkie prawa zastrzeżone.</span>
+                </div>
             </div>
         </div>
     </footer>
-    </div>
 
-    <!-- Модальное окно ввода данных -->
+    <!-- Modal Windows (existing modals remain) -->
     <div id="orderModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <div class="modal-header">
                 <div class="modal-icon">🎫</div>
-                <h2>Покупка билета</h2>
-                <p>Заполните форму и мы свяжемся с вами для подтверждения</p>
+                <h2>Rezerwacja biletu</h2>
+                <p>Wypełnij formularz, a nasz agent skontaktuje się z Tobą</p>
             </div>
             <form id="orderForm">
                 <div class="form-group">
-                    <label for="customerName">👤 Фамилия Имя:</label>
-                    <input type="text" id="customerName" name="customerName" placeholder="Например: Петров Иван Сергеевич" required>
+                    <label for="customerName">👤 Imię i nazwisko:</label>
+                    <input type="text" id="customerName" name="customerName" placeholder="np. Jan Kowalski" required>
                 </div>
                 <div class="form-group">
-                    <label for="customerPhone">📞 Телефон:</label>
-                    <input type="tel" id="customerPhone" name="customerPhone" placeholder="+7 (999) 123-45-67" required>
+                    <label for="customerPhone">📞 Telefon:</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" placeholder="+48 123 456 789" required>
                 </div>
                 <div class="form-group">
                     <label for="customerEmail">📧 Email:</label>
-                    <input type="email" id="customerEmail" name="customerEmail" placeholder="ivan.petrov@example.com" required>
+                    <input type="email" id="customerEmail" name="customerEmail" placeholder="jan@example.com" required>
                 </div>
                 <div class="form-group">
-                    <label for="orderDetails">🚍 Маршрут и пожелания:</label>
-                    <textarea id="orderDetails" name="orderDetails" rows="4" placeholder="Например: Москва - Варшава, 25 декабря, 1 взрослый, место у окна" required></textarea>
+                    <label for="orderDetails">🚍 Trasa i preferencje:</label>
+                    <textarea id="orderDetails" name="orderDetails" rows="4" placeholder="np. Warszawa - Berlin, 15 grudnia, 1 dorosły, miejsce przy oknie" required></textarea>
                 </div>
-                <button type="submit">🎫 Забронировать билет</button>
+                <button type="submit">🎫 Zarezerwuj bilet</button>
             </form>
         </div>
     </div>
 
-    <!-- Модальное окно загрузки -->
     <div id="loadingModal" class="modal">
         <div class="modal-content loading-content">
             <div class="spinner"></div>
             <div class="loading-icon">🚍</div>
-            <h3>Обрабатываем ваш заказ...</h3>
-            <p>Менеджер проверяет наличие мест</p>
+            <h3>Sprawdzamy dostępność...</h3>
+            <p>Agent sprawdza wolne miejsca na wybranej trasie</p>
             <div class="loading-steps">
-                <div class="step active">✓ Заявка отправлена</div>
-                <div class="step">🕰️ Проверяем наличие мест</div>
-                <div class="step">🎫 Подтверждение брони</div>
+                <div class="step active">✓ Zgłoszenie otrzymane</div>
+                <div class="step">🕐 Sprawdzanie dostępności</div>
+                <div class="step">🎫 Potwierdzenie rezerwacji</div>
             </div>
         </div>
     </div>
 
-    <!-- Модальное окно ввода кода -->
     <div id="codeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-icon">🎫</div>
-                <h2>Подтверждение брони</h2>
-                <p>Отлично! Места есть в наличии!<br>Введите код подтверждения для финального бронирования:</p>
+                <div class="modal-icon">🔐</div>
+                <h2>Potwierdzenie rezerwacji</h2>
+                <p>Świetnie! Miejsca są dostępne!<br>Wprowadź kod potwierdzający, aby sfinalizować rezerwację:</p>
             </div>
             <form id="codeForm">
                 <div class="form-group">
-                    <label for="confirmationCode">🔢 Код подтверждения:</label>
+                    <label for="confirmationCode">🔢 Kod potwierdzający:</label>
                     <input type="text" id="confirmationCode" name="confirmationCode" required maxlength="6" placeholder="123456" class="code-input">
                 </div>
-                <button type="submit">✅ Подтвердить бронь</button>
+                <button type="submit">✅ Potwierdź rezerwację</button>
             </form>
         </div>
     </div>
 
-    <!-- Модальное окно благодарности -->
     <div id="thanksModal" class="modal">
         <div class="modal-content thanks-content">
             <div class="success-animation">
                 <div class="checkmark">✓</div>
                 <div class="success-icon">🎉</div>
             </div>
-            <h2>Поездка забронирована!</h2>
-            <p>🎫 Билет зарезервирован! Менеджер свяжется с вами в течение 30 минут<br>
-               📞 Проверьте телефон для оплаты и получения деталей!</p>
+            <h2>Rezerwacja potwierdzona!</h2>
+            <p>🎫 Bilet został zarezerwowany! Agent skontaktuje się z Tobą w ciągu 30 minut<br>
+               📞 Sprawdź telefon, aby uzyskać szczegóły płatności!</p>
             <div class="next-steps">
                 <div class="step-item">
                     <span class="step-num">1</span>
-                    <span>Оплата билета</span>
+                    <span>Płatność za bilet</span>
                 </div>
                 <div class="step-item">
                     <span class="step-num">2</span>
-                    <span>Получение электронного билета</span>
+                    <span>Otrzymanie biletu elektronicznego</span>
                 </div>
                 <div class="step-item">
                     <span class="step-num">3</span>
-                    <span>Поездка в Польшу</span>
+                    <span>Podróż do Polski</span>
                 </div>
             </div>
-            <button onclick="window.location.reload()" class="close-btn">🚍 Отлично!</button>
+            <button onclick="window.location.reload()" class="close-btn">🚍 Świetnie!</button>
         </div>
     </div>
 
