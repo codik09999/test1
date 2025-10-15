@@ -5,10 +5,10 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    line-height: 1.5;
-    color: #0f172a;
-    background: #0f172a;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.4;
+    color: #333333;
+    background: #ffffff;
     min-height: 100vh;
     margin: 0;
     padding: 0;
@@ -22,66 +22,39 @@ body {
 }
 
 header {
+    background: #00d166;
+    padding: 1rem 0;
     text-align: center;
-    padding: 2rem 0;
-    background: transparent;
-    position: relative;
-}
-
-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-    transform: translateX(-50%);
-    pointer-events: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 header h1 {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    font-weight: 800;
-    letter-spacing: -2px;
+    font-size: 2.5rem;
+    margin: 0.5rem 0;
+    font-weight: 700;
     color: #ffffff;
-    position: relative;
-    z-index: 1;
+    letter-spacing: -0.5px;
 }
 
 header p {
     font-size: 1rem;
-    color: #94a3b8;
+    color: rgba(255,255,255,0.9);
     font-weight: 400;
     margin: 0;
-    letter-spacing: 0.5px;
 }
 
 .hero {
     text-align: center;
-    padding: 5rem 2rem;
-    margin: 3rem auto;
-    max-width: 1100px;
-    position: relative;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
-    border: 1px solid rgba(71, 85, 105, 0.3);
-    border-radius: 32px;
-    overflow: hidden;
+    padding: 4rem 2rem;
+    margin: 0 auto;
+    max-width: 1200px;
+    background: #ffffff;
 }
 
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-    pointer-events: none;
+.hero-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: #00d166;
 }
 
 .hero-icon {
@@ -99,10 +72,11 @@ header p {
 .hero-stats {
     display: flex;
     justify-content: center;
-    gap: 3rem;
-    margin: 3rem 0 0 0;
-    position: relative;
-    z-index: 1;
+    gap: 4rem;
+    margin: 3rem 0;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
 }
 
 .stat {
@@ -111,159 +85,158 @@ header p {
 
 .stat strong {
     display: block;
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 0.25rem;
+    color: #00d166;
+    margin-bottom: 0.5rem;
 }
 
 .stat span {
-    font-size: 0.85rem;
-    color: #94a3b8;
+    font-size: 0.9rem;
+    color: #666666;
     font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .hero h2 {
-    font-size: 3.5rem;
-    margin-bottom: 1.5rem;
-    color: #ffffff;
-    font-weight: 800;
-    letter-spacing: -1.5px;
-    line-height: 1.1;
-    position: relative;
-    z-index: 1;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333333;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
 }
 
 .hero p {
     font-size: 1.1rem;
-    margin-bottom: 3rem;
-    color: #cbd5e1;
+    margin-bottom: 2rem;
+    color: #666666;
     font-weight: 400;
-    max-width: 600px;
+    max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    line-height: 1.6;
-    position: relative;
-    z-index: 1;
+    line-height: 1.5;
 }
 
 .order-btn {
-    background: #3b82f6;
+    background: #00d166;
     color: #ffffff;
     border: none;
-    padding: 16px 32px;
-    font-size: 1rem;
+    padding: 16px 40px;
+    font-size: 1.1rem;
     font-weight: 600;
-    border-radius: 16px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    position: relative;
-    z-index: 1;
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    text-transform: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .order-btn:hover {
-    background: #2563eb;
+    background: #00b359;
     transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+    box-shadow: 0 4px 12px rgba(0,209,102,0.3);
 }
 
 .order-btn:active {
     transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .features {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin: 5rem auto;
-    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin: 4rem auto;
+    max-width: 1200px;
     padding: 0 2rem;
+    background: #ffffff;
 }
 
 .feature {
-    background: rgba(30, 41, 59, 0.6);
-    border: 1px solid rgba(71, 85, 105, 0.3);
+    background: #ffffff;
+    border: 2px solid #f1f3f4;
     padding: 2rem;
-    border-radius: 24px;
+    border-radius: 12px;
     text-align: center;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .feature:hover {
-    background: rgba(30, 41, 59, 0.8);
-    border-color: rgba(71, 85, 105, 0.5);
-    transform: translateY(-4px);
+    border-color: #00d166;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,209,102,0.15);
 }
 
 .feature-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
     display: block;
+    color: #00d166;
 }
 
 .feature h3 {
-    color: #ffffff;
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem;
+    color: #333333;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
     font-weight: 600;
 }
 
 .feature p {
-    color: #94a3b8;
-    font-size: 0.9rem;
+    color: #666666;
+    font-size: 1rem;
     line-height: 1.5;
 }
 
 /* Услуги */
 .services {
-    margin: 6rem auto 4rem;
+    margin: 5rem auto;
     text-align: center;
-    max-width: 1100px;
-    padding: 0 2rem;
+    max-width: 1200px;
+    padding: 4rem 2rem;
+    background: #f8f9fa;
 }
 
 .services h2 {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    color: #ffffff;
+    color: #333333;
     margin-bottom: 3rem;
     letter-spacing: -0.5px;
 }
 
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
 }
 
 .service-item {
-    background: rgba(30, 41, 59, 0.7);
-    border: 1px solid rgba(71, 85, 105, 0.4);
-    padding: 1.75rem;
-    border-radius: 20px;
+    background: #ffffff;
+    border: 2px solid #e9ecef;
+    padding: 2rem;
+    border-radius: 12px;
     transition: all 0.3s ease;
-    text-align: left;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .service-item:hover {
-    background: rgba(30, 41, 59, 0.9);
-    border-color: rgba(59, 130, 246, 0.4);
-    transform: translateY(-2px);
+    border-color: #00d166;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,209,102,0.15);
 }
 
 .service-icon {
-    font-size: 2rem;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
     display: block;
 }
 
 .service-item h4 {
-    color: #ffffff;
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
+    color: #333333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     line-height: 1.3;
 }
@@ -276,41 +249,43 @@ header p {
 
 /* Маршруты */
 .route-preview {
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px solid rgba(71, 85, 105, 0.3);
-    border-radius: 20px;
-    padding: 1.5rem;
-    margin-top: 3rem;
-    position: relative;
-    z-index: 1;
+    background: #ffffff;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .route-item {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    color: white;
-    font-size: 1rem;
+    gap: 1.5rem;
+    color: #333333;
+    font-size: 1.1rem;
     flex-wrap: wrap;
+    font-weight: 600;
 }
 
 .route-from, .route-to {
+    color: #333333;
     font-weight: 600;
 }
 
 .route-arrow {
-    color: #10b981;
-    font-size: 1.2rem;
+    color: #00d166;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .route-price {
-    background: #10b981;
+    background: #00d166;
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
 }
 
 .route-card {
@@ -318,15 +293,15 @@ header p {
 }
 
 .route-time {
-    color: #94a3b8 !important;
-    font-size: 0.85rem !important;
+    color: #666666 !important;
+    font-size: 0.9rem !important;
     font-weight: 400 !important;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .route-price {
-    color: #10b981 !important;
-    font-size: 1.25rem !important;
+    color: #00d166 !important;
+    font-size: 1.3rem !important;
     font-weight: 700 !important;
 }
 
