@@ -7,102 +7,181 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🚍 POLBUS - Автобусы в Польшу</h1>
-            <p>Комфортные поездки по выгодным ценам • Ежедневно</p>
-        </header>
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">FlixBus</span>
+            </div>
+            <nav class="main-nav">
+                <a href="#">Поиск билетов</a>
+                <a href="#">Мои поездки</a>
+                <a href="#">Помощь</a>
+            </nav>
+            <div class="header-actions">
+                <button class="language-btn">RU</button>
+                <button class="login-btn">Войти</button>
+            </div>
+        </div>
+    </header>
 
-        <main>
-            <section class="hero">
-                <div class="hero-icon">🚍</div>
-                <h2>Купите билет на автобус в Польшу</h2>
-                <p>Москва • Минск • Киев → Варшава • Краков • Люблин</p>
-                <button id="orderBtn" class="order-btn">🎫 Купить билет</button>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <strong>5000+</strong>
-                        <span>поездок в месяц</span>
-                    </div>
-                    <div class="stat">
-                        <strong>8 лет</strong>
-                        <span>на рынке</span>
-                    </div>
-                    <div class="stat">
-                        <strong>24/7</strong>
-                        <span>онлайн бронирование</span>
+    <main>
+        <!-- Hero Section with Search -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1>Найдите и забронируйте автобусные билеты</h1>
+                    <p class="hero-subtitle">Лучшие цены на поездки по Европе</p>
+                </div>
+                
+                <!-- Search Form -->
+                <div class="search-form-container">
+                    <div class="search-form">
+                        <div class="form-row">
+                            <div class="form-group from-to">
+                                <div class="input-group">
+                                    <label>Откуда</label>
+                                    <input type="text" placeholder="Москва" class="search-input">
+                                </div>
+                                <button class="swap-btn">⇄</button>
+                                <div class="input-group">
+                                    <label>Куда</label>
+                                    <input type="text" placeholder="Варшава" class="search-input">
+                                </div>
+                            </div>
+                            <div class="form-group date-group">
+                                <label>Отправление</label>
+                                <input type="date" class="search-input date-input">
+                            </div>
+                            <div class="form-group passengers">
+                                <label>Пассажиры</label>
+                                <select class="search-input">
+                                    <option>1 Пассажир</option>
+                                    <option>2 Пассажира</option>
+                                    <option>3+ Пассажиров</option>
+                                </select>
+                            </div>
+                            <button id="orderBtn" class="search-btn">Поиск</button>
+                        </div>
                     </div>
                 </div>
-                <div class="route-preview">
-                    <div class="route-item">
-                        <span class="route-from">🇷🇺 Москва</span>
-                        <span class="route-arrow">→</span>
-                        <span class="route-to">🇵🇱 Варшава</span>
-                        <span class="route-price">от 2500₽</span>
-                    </div>
-                </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="features">
-                <div class="feature">
-                    <div class="feature-icon">💸</div>
-                    <h3>Выгодно</h3>
-                    <p>Цены от 2500₽ до Польши<br>Скидки при раннем бронировании</p>
+        <!-- Popular Destinations -->
+        <section class="popular-destinations">
+            <div class="container">
+                <h2>Популярные направления</h2>
+                <div class="destinations-grid">
+                    <div class="destination-card">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="Варшава">
+                        <div class="destination-info">
+                            <h3>Варшава</h3>
+                            <p>от 2500 ₽</p>
+                        </div>
+                    </div>
+                    <div class="destination-card">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="Краков">
+                        <div class="destination-info">
+                            <h3>Краков</h3>
+                            <p>от 1800 ₽</p>
+                        </div>
+                    </div>
+                    <div class="destination-card">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="Люблин">
+                        <div class="destination-info">
+                            <h3>Люблин</h3>
+                            <p>от 1500 ₽</p>
+                        </div>
+                    </div>
+                    <div class="destination-card">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="Гданьск">
+                        <div class="destination-info">
+                            <h3>Гданьск</h3>
+                            <p>от 3200 ₽</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="feature">
-                    <div class="feature-icon">🚍</div>
-                    <h3>Комфортно</h3>
-                    <p>Мягкие кресла, Wi-Fi, розетки<br>Кондиционер и туалет на борту</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">✅</div>
-                    <h3>Надежно</h3>
-                    <p>Лицензированные перевозки<br>Опытные водители и современные автобусы</p>
-                </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="services">
-                <h2>Популярные маршруты</h2>
-                <div class="services-grid">
-                    <div class="service-item route-card">
-                        <span class="service-icon">🇷🇺</span>
-                        <h4>Москва → Варшава</h4>
-                        <p class="route-time">✓ 18 часов в пути</p>
-                        <p class="route-price">от 2500₽</p>
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">💰</div>
+                        <h3>Лучшие цены</h3>
+                        <p>Мы сравниваем цены со всеми перевозчиками и предлагаем самые выгодные варианты.</p>
                     </div>
-                    <div class="service-item route-card">
-                        <span class="service-icon">🇺🇦</span>
-                        <h4>Киев → Краков</h4>
-                        <p class="route-time">✓ 12 часов в пути</p>
-                        <p class="route-price">от 1800₽</p>
+                    <div class="feature">
+                        <div class="feature-icon">🌍</div>
+                        <h3>По всей Европе</h3>
+                        <p>Более 2500 направлений по 35 странам Европы. Путешествуйте легко и удобно.</p>
                     </div>
-                    <div class="service-item route-card">
-                        <span class="service-icon">🇧🇾</span>
-                        <h4>Минск → Люблин</h4>
-                        <p class="route-time">✓ 8 часов в пути</p>
-                        <p class="route-price">от 1500₽</p>
-                    </div>
-                    <div class="service-item route-card">
-                        <span class="service-icon">🇷🇺</span>
-                        <h4>СПб → Гданьск</h4>
-                        <p class="route-time">✓ 15 часов в пути</p>
-                        <p class="route-price">от 3200₽</p>
-                    </div>
-                    <div class="service-item route-card">
-                        <span class="service-icon">🇺🇦</span>
-                        <h4>Львов → Вроцлав</h4>
-                        <p class="route-time">✓ 6 часов в пути</p>
-                        <p class="route-price">от 1200₽</p>
-                    </div>
-                    <div class="service-item route-card">
-                        <span class="service-icon">🇧🇾</span>
-                        <h4>Брест → Варшава</h4>
-                        <p class="route-time">✓ 4 часа в пути</p>
-                        <p class="route-price">от 900₽</p>
+                    <div class="feature">
+                        <div class="feature-icon">📱</div>
+                        <h3>Простое бронирование</h3>
+                        <p>Бронируйте за несколько кликов на сайте или в мобильном приложении.</p>
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
+
+        <!-- Mobile App Section -->
+        <section class="app-section">
+            <div class="container">
+                <div class="app-content">
+                    <div class="app-info">
+                        <h2>Получите приложение FlixBus</h2>
+                        <p>Бронируйте поездки на ходу, отслеживайте автобусы в реальном времени и получайте эксклюзивные предложения.</p>
+                        <div class="app-stores">
+                            <button class="store-btn">App Store</button>
+                            <button class="store-btn">Google Play</button>
+                        </div>
+                    </div>
+                    <div class="app-image">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23e8e8e8'/%3E%3C/svg%3E" alt="Мобильное приложение">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>FlixBus</h4>
+                    <ul>
+                        <li><a href="#">О компании</a></li>
+                        <li><a href="#">Карьера</a></li>
+                        <li><a href="#">Пресс-центр</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Помощь</h4>
+                    <ul>
+                        <li><a href="#">ЧАВО</a></li>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Подать жалобу</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Путешествия</h4>
+                    <ul>
+                        <li><a href="#">Направления</a></li>
+                        <li><a href="#">Популярные маршруты</a></li>
+                        <li><a href="#">Подарочные карты</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 FlixBus. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
     </div>
 
     <!-- Модальное окно ввода данных -->
