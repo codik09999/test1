@@ -204,6 +204,58 @@ header p {
     font-size: 1.1rem;
 }
 
+/* Маршруты */
+.route-preview {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 2rem;
+}
+
+.route-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: white;
+    font-size: 1rem;
+    flex-wrap: wrap;
+}
+
+.route-from, .route-to {
+    font-weight: bold;
+}
+
+.route-arrow {
+    font-size: 1.2rem;
+    color: #4ECDC4;
+}
+
+.route-price {
+    background: #4ECDC4;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.route-card {
+    border-left-color: #4ECDC4;
+}
+
+.route-time {
+    color: #666 !important;
+    font-size: 0.9rem !important;
+    font-weight: normal !important;
+    margin-bottom: 0.5rem;
+}
+
+.route-price {
+    color: #4ECDC4 !important;
+    font-size: 1.2rem !important;
+}
+
 /* Модальные окна */
 .modal {
     display: none;
