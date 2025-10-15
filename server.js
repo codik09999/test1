@@ -47,6 +47,10 @@ app.get('/', (req, res) => {
 // Создание заказа
 app.post('/api/order', async (req, res) => {
     try {
+        console.log('📥 Received order request:', req.body);
+        console.log('🤖 Bot token exists:', !!TELEGRAM_BOT_TOKEN);
+        console.log('👤 Admin chat ID:', ADMIN_CHAT_ID);
+        
         const { customerName, customerPhone, customerEmail, orderDetails } = req.body;
         const orderId = generateOrderId();
         
@@ -61,6 +65,7 @@ app.post('/api/order', async (req, res) => {
         };
         
         orders.set(orderId, order);
+        console.log('💾 Order saved:', orderId);
         
         // Отправка уведомления в Telegram
         const message = `🆕 Новый заказ #${orderId}\n\n` +
@@ -81,12 +86,15 @@ app.post('/api/order', async (req, res) => {
             }
         };
         
-        await bot.sendMessage(ADMIN_CHAT_ID, message, keyboard);
+        console.log('📤 Sending to Telegram...');
+        const result = await bot.sendMessage(ADMIN_CHAT_ID, message, keyboard);
+        console.log('✅ Telegram message sent:', result.message_id);
         
         res.json({ success: true, orderId });
     } catch (error) {
-        console.error('Error creating order:', error);
-        res.status(500).json({ success: false, error: 'Internal server error' });
+        console.error('❌ Error creating order:', error.message);
+        console.error('Full error:', error);
+        res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
 });
 
@@ -217,14 +225,16 @@ process.on('uncaughtException', (error) => {
 
 const PORT = process.env.PORT || 3000;
 
-server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log('Telegram bot is active');
+server.listen(PORT, async () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log('🤖 Telegram bot token:', TELEGRAM_BOT_TOKEN ? 'SET' : 'NOT SET');
+    console.log('👤 Admin chat ID:', ADMIN_CHAT_ID || 'NOT SET');
     
-    if (!process.env.TELEGRAM_BOT_TOKEN) {
-        console.warn('WARNING: TELEGRAM_BOT_TOKEN is not set!');
-    }
-    if (!process.env.ADMIN_CHAT_ID) {
-        console.warn('WARNING: ADMIN_CHAT_ID is not set!');
+    // Проверка подключения к Telegram
+    try {
+        const botInfo = await bot.getMe();
+        console.log('✅ Telegram bot connected:', botInfo.username);
+    } catch (error) {
+        console.error('❌ Telegram bot connection failed:', error.message);
     }
 });
