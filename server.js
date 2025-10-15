@@ -21,8 +21,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '.')));
 
 // Telegram Bot setup
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
-const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID;
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '7808830885:AAHFkGTaOylnQ99RrNolU5UgjEgo2gxFrqo';
+const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID || '2063086506';
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 
 // In-memory storage для заказов (в продакшене используйте базу данных)
 const orders = new Map();
