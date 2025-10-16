@@ -1982,3 +1982,301 @@ body {
         font-size: 0.8rem;
     }
 }
+
+/* Custom Date Picker Styles */
+.datepicker-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border: 2px solid var(--gray-200);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.12),
+        0 5px 15px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transform: translateY(-15px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 380px;
+}
+
+.datepicker-dropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.datepicker-content {
+    padding: 20px;
+}
+
+/* Popular Dates Section */
+.popular-dates-section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.section-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.popular-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.popular-date-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.popular-date-item:hover {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.08));
+    border-color: rgba(37, 99, 235, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.popular-date-item.today {
+    background: linear-gradient(135deg, var(--accent-orange), var(--accent-orange-light));
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.popular-date-item.today:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+.popular-date-item.weekend:not(.today) {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.date-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+.popular-date-item.today .date-label {
+    opacity: 1;
+}
+
+.date-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.day-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+.day-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.popular-date-item.today .day-number {
+    color: var(--white);
+}
+
+.month {
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+/* Calendar Section */
+.calendar-section {
+    
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding: 0 4px;
+}
+
+.calendar-month-year {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.calendar-nav {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--gray-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+    color: var(--gray-600);
+}
+
+.calendar-nav:hover {
+    background: var(--primary-blue);
+    color: var(--white);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-day-header {
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--gray-700);
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.calendar-day:hover:not(.empty):not(.past) {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.1));
+    border-color: rgba(37, 99, 235, 0.3);
+    color: var(--primary-blue);
+    transform: scale(1.1);
+}
+
+.calendar-day.today {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+    color: var(--white);
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.calendar-day.today:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.calendar-day.past {
+    color: var(--gray-400);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.calendar-day.weekend:not(.today):not(.past) {
+    color: var(--danger);
+}
+
+.calendar-day.empty {
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Улучшенные стили для input при активном date picker */
+.input-wrapper:has(.datepicker-dropdown[style*="block"]) .form-input {
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-color: var(--primary-blue);
+}
+
+/* Анимации для календаря */
+@keyframes calendarFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.calendar-grid {
+    animation: calendarFadeIn 0.3s ease-out;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .datepicker-dropdown {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        min-width: 320px;
+        max-width: 90vw;
+        border-radius: var(--border-radius-lg);
+        border-top: 2px solid var(--gray-200);
+    }
+    
+    .datepicker-dropdown.show {
+        transform: translate(-50%, -50%);
+    }
+    
+    .popular-dates {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+    }
+    
+    .popular-date-item {
+        padding: 6px 2px;
+    }
+    
+    .day-number {
+        font-size: 1rem;
+    }
+    
+    .calendar-day {
+        font-size: 0.85rem;
+    }
+    
+    .calendar-nav {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+}

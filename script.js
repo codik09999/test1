@@ -439,13 +439,230 @@ function initCityAutocomplete() {
     });
 }
 
+// ========== Кастомный Date Picker ==========
+
+// Функция для получения популярных дат
+function getPopularDates() {
+    const today = new Date();
+    const popularDates = [];
+    
+    // Добавляем сегодня и следующие дни
+    for (let i = 0; i < 14; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        
+        let label = '';
+        if (i === 0) label = 'Dziś';
+        else if (i === 1) label = 'Jutro';
+        else if (i === 2) label = 'Pojutrze';
+        
+        popularDates.push({
+            date: date,
+            label: label,
+            dayName: date.toLocaleDateString('pl-PL', { weekday: 'short' }),
+            dayNumber: date.getDate(),
+            month: date.toLocaleDateString('pl-PL', { month: 'short' }),
+            isToday: i === 0,
+            isTomorrow: i === 1,
+            isWeekend: date.getDay() === 0 || date.getDay() === 6
+        });
+    }
+    
+    return popularDates;
+}
+
+// Функция для создания календаря
+function createCalendar(month, year) {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+    
+    let calendar = '<div class="calendar-grid">';
+    
+    // Заголовки дней недели
+    const dayNames = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb'];
+    dayNames.forEach(day => {
+        calendar += `<div class="calendar-day-header">${day}</div>`;
+    });
+    
+    // Пустые ячейки для выравнивания
+    const startDay = firstDay === 0 ? 6 : firstDay - 1; // Понедельник = 0
+    for (let i = 0; i < startDay; i++) {
+        calendar += '<div class="calendar-day empty"></div>';
+    }
+    
+    // Дни месяца
+    for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const isToday = date.toDateString() === today.toDateString();
+        const isPast = date < today && !isToday;
+        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+        
+        let classes = 'calendar-day';
+        if (isToday) classes += ' today';
+        if (isPast) classes += ' past';
+        if (isWeekend) classes += ' weekend';
+        
+        calendar += `<div class="${classes}" data-date="${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}">${day}</div>`;
+    }
+    
+    calendar += '</div>';
+    return calendar;
+}
+
+// Функция для создания date picker
+function createDatePicker(inputElement) {
+    const wrapper = inputElement.closest('.input-wrapper');
+    let dropdown = wrapper.querySelector('.datepicker-dropdown');
+    
+    // Создаем dropdown если его нет
+    if (!dropdown) {
+        dropdown = document.createElement('div');
+        dropdown.className = 'datepicker-dropdown';
+        wrapper.appendChild(dropdown);
+    }
+    
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+    
+    function renderDatePicker() {
+        const popularDates = getPopularDates();
+        const monthNames = [
+            'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+            'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
+        ];
+        
+        dropdown.innerHTML = `
+            <div class="datepicker-content">
+                <div class="popular-dates-section">
+                    <h4 class="section-title">Popularne daty</h4>
+                    <div class="popular-dates">
+                        ${popularDates.slice(0, 7).map(dateObj => `
+                            <div class="popular-date-item ${dateObj.isToday ? 'today' : ''} ${dateObj.isWeekend ? 'weekend' : ''}" 
+                                 data-date="${dateObj.date.toISOString().split('T')[0]}">
+                                <div class="date-label">${dateObj.label}</div>
+                                <div class="date-info">
+                                    <span class="day-name">${dateObj.dayName}</span>
+                                    <span class="day-number">${dateObj.dayNumber}</span>
+                                    <span class="month">${dateObj.month}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="calendar-section">
+                    <div class="calendar-header">
+                        <button class="calendar-nav prev" data-action="prev">‹</button>
+                        <div class="calendar-month-year">
+                            ${monthNames[currentMonth]} ${currentYear}
+                        </div>
+                        <button class="calendar-nav next" data-action="next">›</button>
+                    </div>
+                    ${createCalendar(currentMonth, currentYear)}
+                </div>
+            </div>
+        `;
+        
+        // Обработчики для популярных дат
+        dropdown.querySelectorAll('.popular-date-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const dateValue = item.dataset.date;
+                inputElement.value = dateValue;
+                dropdown.style.display = 'none';
+                dropdown.classList.remove('show');
+            });
+        });
+        
+        // Обработчики для дней календаря
+        dropdown.querySelectorAll('.calendar-day:not(.empty):not(.past)').forEach(day => {
+            day.addEventListener('click', () => {
+                const dateValue = day.dataset.date;
+                if (dateValue) {
+                    inputElement.value = dateValue;
+                    dropdown.style.display = 'none';
+                    dropdown.classList.remove('show');
+                }
+            });
+        });
+        
+        // Обработчики навигации календаря
+        dropdown.querySelector('.calendar-nav.prev').addEventListener('click', (e) => {
+            e.preventDefault();
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderDatePicker();
+        });
+        
+        dropdown.querySelector('.calendar-nav.next').addEventListener('click', (e) => {
+            e.preventDefault();
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderDatePicker();
+        });
+    }
+    
+    // Показать date picker
+    function showDatePicker() {
+        renderDatePicker();
+        dropdown.style.display = 'block';
+        
+        requestAnimationFrame(() => {
+            dropdown.classList.add('show');
+        });
+    }
+    
+    // Обработчики событий
+    inputElement.addEventListener('focus', showDatePicker);
+    inputElement.addEventListener('click', showDatePicker);
+    
+    // Скрыть при клике вне элемента
+    document.addEventListener('click', (e) => {
+        if (!wrapper.contains(e.target)) {
+            dropdown.style.display = 'none';
+            dropdown.classList.remove('show');
+        }
+    });
+    
+    // Обработка клавиш
+    inputElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            dropdown.style.display = 'none';
+            dropdown.classList.remove('show');
+            inputElement.blur();
+        }
+    });
+}
+
+// Инициализация date picker для полей дат
+function initDatePicker() {
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        // Убираем стандартный date picker
+        input.type = 'text';
+        input.placeholder = 'Wybierz datę';
+        input.setAttribute('readonly', 'true');
+        
+        createDatePicker(input);
+    });
+}
+
 // Инициализация всех функций при загрузке DOM
 document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initNavigation();
     initMicroInteractions();
     initCityAutocomplete();
+    initDatePicker();
     
     console.log('🎨 Анимации и взаимодействия инициализированы');
     console.log('🏙️ Автодополнение городов активировано');
+    console.log('📅 Date picker активирован');
 });
