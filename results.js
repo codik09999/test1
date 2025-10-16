@@ -88,17 +88,35 @@ class BusResultsPage {
             swapBtn.addEventListener('click', this.swapRoute.bind(this));
         }
 
-        // Date navigation
+        // Date navigation (quick arrows)
         const prevBtn = document.querySelector('.date-nav-btn.prev');
         const nextBtn = document.querySelector('.date-nav-btn.next');
         
         if (prevBtn) {
-            prevBtn.addEventListener('click', () => this.changeDate(-1));
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.changeDate(-1);
+            });
         }
         
         if (nextBtn) {
-            nextBtn.addEventListener('click', () => this.changeDate(1));
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.changeDate(1);
+            });
         }
+
+        // Date picker functionality
+        const dateDisplay = document.querySelector('.date-display');
+        if (dateDisplay) {
+            dateDisplay.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleDatePicker();
+            });
+        }
+
+        // Initialize date picker
+        this.initDatePicker();
 
         // Passengers dropdown
         const passengersDisplay = document.querySelector('.passengers-display');
@@ -133,6 +151,9 @@ class BusResultsPage {
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.passengers-input')) {
                 this.hidePassengersDropdown();
+            }
+            if (!e.target.closest('.date-input')) {
+                this.hideDatePicker();
             }
         });
     }
@@ -420,6 +441,189 @@ class BusResultsPage {
         arrivalCities.forEach(element => {
             element.textContent = this.searchParams.to;
         });
+    }
+
+    // === DATE PICKER FUNCTIONALITY ===
+    initDatePicker() {
+        this.currentDateIndex = 0;
+        this.maxVisibleDates = 7;
+        this.popularDates = this.generatePopularDates();
+    }
+
+    generatePopularDates() {
+        const dates = [];
+        const today = new Date();
+        
+        for (let i = 0; i < 30; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+            
+            let label = '';
+            if (i === 0) label = 'Today';
+            else if (i === 1) label = 'Tomorrow';
+            else if (i === 2) label = 'Day after';
+            
+            dates.push({
+                date: date,
+                label: label,
+                dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+                dayNumber: date.getDate(),
+                month: date.toLocaleDateString('en-US', { month: 'short' }),
+                isToday: i === 0,
+                isSelected: this.isSameDate(date, this.currentDate),
+                isWeekend: date.getDay() === 0 || date.getDay() === 6
+            });
+        }
+        
+        return dates;
+    }
+
+    toggleDatePicker() {
+        const dropdown = document.querySelector('.datepicker-dropdown');
+        if (dropdown) {
+            if (dropdown.classList.contains('show')) {
+                this.hideDatePicker();
+            } else {
+                this.showDatePicker();
+            }
+        }
+    }
+
+    showDatePicker() {
+        const dropdown = document.querySelector('.datepicker-dropdown');
+        if (dropdown) {
+            this.renderDatePicker();
+            dropdown.classList.add('show');
+        }
+    }
+
+    hideDatePicker() {
+        const dropdown = document.querySelector('.datepicker-dropdown');
+        if (dropdown) {
+            dropdown.classList.remove('show');
+        }
+    }
+
+    renderDatePicker() {
+        const visibleDates = this.popularDates.slice(this.currentDateIndex, this.currentDateIndex + this.maxVisibleDates);
+        const canScrollLeft = this.currentDateIndex > 0;
+        const canScrollRight = this.currentDateIndex + this.maxVisibleDates < this.popularDates.length;
+        
+        // Update header info
+        const rangeInfo = document.querySelector('.date-range-info');
+        if (rangeInfo && visibleDates.length > 0) {
+            const first = visibleDates[0];
+            const last = visibleDates[visibleDates.length - 1];
+            rangeInfo.textContent = `${first.dayNumber} ${first.month} - ${last.dayNumber} ${last.month}`;
+        }
+        
+        // Render dates
+        const container = document.querySelector('.popular-dates');
+        if (container) {
+            container.innerHTML = '';
+            
+            visibleDates.forEach(dateObj => {
+                const dateElement = document.createElement('div');
+                dateElement.className = `popular-date-item ${
+                    dateObj.isToday ? 'today' : ''
+                } ${
+                    dateObj.isWeekend ? 'weekend' : ''
+                } ${
+                    dateObj.isSelected ? 'selected' : ''
+                }`;
+                
+                dateElement.innerHTML = `
+                    ${dateObj.label ? `<div class="date-label">${dateObj.label}</div>` : ''}
+                    <div class="date-info">
+                        <span class="day-name">${dateObj.dayName}</span>
+                        <span class="day-number">${dateObj.dayNumber}</span>
+                        <span class="month">${dateObj.month}</span>
+                    </div>
+                `;
+                
+                dateElement.addEventListener('click', () => {
+                    this.selectDate(dateObj.date);
+                });
+                
+                container.appendChild(dateElement);
+            });
+        }
+        
+        // Update navigation buttons
+        const prevBtn = document.querySelector('.datepicker-dropdown .nav-btn.prev');
+        const nextBtn = document.querySelector('.datepicker-dropdown .nav-btn.next');
+        
+        if (prevBtn) {
+            prevBtn.disabled = !canScrollLeft;
+            prevBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (canScrollLeft) {
+                    this.currentDateIndex = Math.max(0, this.currentDateIndex - this.maxVisibleDates);
+                    this.renderDatePicker();
+                }
+            };
+        }
+        
+        if (nextBtn) {
+            nextBtn.disabled = !canScrollRight;
+            nextBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (canScrollRight) {
+                    this.currentDateIndex = Math.min(
+                        this.popularDates.length - this.maxVisibleDates,
+                        this.currentDateIndex + this.maxVisibleDates
+                    );
+                    this.renderDatePicker();
+                }
+            };
+        }
+        
+        // Update indicators
+        const indicators = document.querySelector('.dates-indicator');
+        if (indicators) {
+            const totalPages = Math.ceil(this.popularDates.length / this.maxVisibleDates);
+            const currentPage = Math.floor(this.currentDateIndex / this.maxVisibleDates);
+            
+            indicators.innerHTML = '';
+            for (let i = 0; i < totalPages; i++) {
+                const dot = document.createElement('div');
+                dot.className = `indicator-dot ${i === currentPage ? 'active' : ''}`;
+                dot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.currentDateIndex = i * this.maxVisibleDates;
+                    this.renderDatePicker();
+                });
+                indicators.appendChild(dot);
+            }
+        }
+    }
+
+    selectDate(date) {
+        this.currentDate = new Date(date);
+        
+        // Update the main display
+        this.updateDateDisplay();
+        
+        // Update selected state in popular dates
+        this.popularDates.forEach(dateObj => {
+            dateObj.isSelected = this.isSameDate(dateObj.date, date);
+        });
+        
+        // Update search params
+        this.searchParams.date = date.toISOString().split('T')[0];
+        
+        // Close picker
+        this.hideDatePicker();
+        
+        // Trigger search update
+        setTimeout(() => {
+            this.searchBuses();
+        }, 300);
+    }
+
+    isSameDate(date1, date2) {
+        if (!date1 || !date2) return false;
+        return date1.toDateString() === date2.toDateString();
     }
 
     swapRoute() {

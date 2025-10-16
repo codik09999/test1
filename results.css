@@ -945,3 +945,225 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(30, 64, 175, 0.1);
 }
+
+.date-input {
+    position: relative;
+}
+
+/* Date Picker Dropdown */
+.datepicker-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    margin-top: 8px;
+    min-width: 400px;
+}
+
+.datepicker-dropdown.show {
+    display: block;
+    animation: datepickerFadeIn 0.3s ease;
+}
+
+@keyframes datepickerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.datepicker-content {
+    padding: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.date-range-info {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.navigation-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #64748b;
+}
+
+.nav-btn:hover:not(:disabled) {
+    border-color: #1e40af;
+    color: #1e40af;
+    background: #f8fafc;
+}
+
+.nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.popular-dates-container {
+    margin-bottom: 16px;
+}
+
+.popular-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.popular-date-item {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+.popular-date-item:hover {
+    border-color: #1e40af;
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
+}
+
+.popular-date-item.today {
+    background: #eff6ff;
+    border-color: #1e40af;
+    color: #1e40af;
+}
+
+.popular-date-item.weekend {
+    background: #fef7f0;
+    border-color: #f59e0b;
+}
+
+.popular-date-item.selected {
+    background: #1e40af;
+    border-color: #1e40af;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.date-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #f59e0b;
+}
+
+.popular-date-item.today .date-label {
+    color: #1e40af;
+}
+
+.popular-date-item.selected .date-label {
+    color: #93c5fd;
+}
+
+.date-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.day-name {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.popular-date-item.today .day-name,
+.popular-date-item.selected .day-name {
+    color: inherit;
+}
+
+.day-number {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.popular-date-item.selected .day-number {
+    color: white;
+}
+
+.month {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.popular-date-item.today .month,
+.popular-date-item.selected .month {
+    color: inherit;
+    opacity: 0.8;
+}
+
+.dates-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.indicator-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #d1d5db;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.indicator-dot.active {
+    background: #1e40af;
+    transform: scale(1.2);
+}
+
+.indicator-dot:hover {
+    background: #64748b;
+}
