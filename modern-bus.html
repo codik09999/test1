@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenLine - Nowoczesne podróże autobusowe po Polsce</title>
+    <link rel="stylesheet" href="modern-bus.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="container">
+                <div class="nav-content">
+                    <div class="nav-brand">
+                        <div class="brand-logo">
+                            <i class="fas fa-route brand-icon"></i>
+                            <span class="brand-text">GreenLine</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-menu" id="navMenu">
+                        <a href="#home" class="nav-link">Strona główna</a>
+                        <a href="#routes" class="nav-link">Trasy</a>
+                        <a href="#about" class="nav-link">O nas</a>
+                        <a href="#contact" class="nav-link">Kontakt</a>
+                    </div>
+                    
+                    <div class="nav-actions">
+                        <button class="btn-outline btn-lang">
+                            <i class="fas fa-globe"></i>
+                            PL
+                        </button>
+                        <button class="btn-primary btn-login">
+                            <i class="fas fa-user"></i>
+                            Zaloguj
+                        </button>
+                        <button class="mobile-toggle" id="mobileToggle">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-pattern"></div>
+        <div class="hero-gradient"></div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text fade-in">
+                    <div class="hero-badge">
+                        <i class="fas fa-leaf"></i>
+                        Ekologiczna podróż
+                    </div>
+                    <h1 class="hero-title">
+                        Podróżuj <span class="text-gradient">komfortowo</span><br>
+                        i <span class="text-gradient">bezpiecznie</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Nowoczesne autobusy, najlepsze ceny i połączenia do wszystkich większych miast w Polsce. Zarezerwuj bilet w kilka sekund.
+                    </p>
+                </div>
+                
+                <!-- Enhanced Search Form -->
+                <div class="search-container fade-in-delay">
+                    <div class="search-card">
+                        <div class="search-header">
+                            <h3 class="search-title">
+                                <i class="fas fa-search"></i>
+                                Znajdź idealną trasę
+                            </h3>
+                            <div class="trip-tabs">
+                                <button class="trip-tab active" data-tab="oneway">
+                                    <i class="fas fa-arrow-right"></i>
+                                    W jedną stronę
+                                </button>
+                                <button class="trip-tab" data-tab="return">
+                                    <i class="fas fa-exchange-alt"></i>
+                                    Powrót
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <form class="search-form" id="searchForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-map-marker-alt text-success"></i>
+                                        Miejsce odjazdu
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <input type="text" class="form-input" placeholder="Skąd wyruszasz?" value="Warszawa">
+                                        <div class="input-icon">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <button type="button" class="swap-button" id="swapButton">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-map-marker-alt text-danger"></i>
+                                        Miejsce docelowe
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <input type="text" class="form-input" placeholder="Gdzie jedziesz?" value="Kraków">
+                                        <div class="input-icon">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-calendar text-primary"></i>
+                                        Data odjazdu
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <input type="date" class="form-input" value="2025-10-20">
+                                        <div class="input-icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-users text-info"></i>
+                                        Pasażerowie
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <select class="form-input">
+                                            <option>1 pasażer</option>
+                                            <option>2 pasażerów</option>
+                                            <option>3 pasażerów</option>
+                                            <option>4+ pasażerów</option>
+                                        </select>
+                                        <div class="input-icon">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn-search" id="searchButton">
+                                <span class="btn-text">Wyszukaj połączenia</span>
+                                <i class="fas fa-arrow-right btn-icon"></i>
+                                <div class="btn-ripple"></div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating elements -->
+        <div class="floating-elements">
+            <div class="floating-circle"></div>
+            <div class="floating-circle"></div>
+            <div class="floating-circle"></div>
+        </div>
+    </section>
+
+    <!-- Popular Routes -->
+    <section class="popular-routes" id="routes">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-badge">
+                    <i class="fas fa-fire"></i>
+                    Najpopularniejsze
+                </div>
+                <h2 class="section-title">Wybrane trasy</h2>
+                <p class="section-subtitle">
+                    Odkryj najczęściej wybierane połączenia z najlepszymi cenami i najkrótszym czasem podróży
+                </p>
+            </div>
+            
+            <div class="routes-grid">
+                <div class="route-card fade-in-up" data-delay="100">
+                    <div class="route-header">
+                        <div class="route-cities">
+                            <div class="city-from">
+                                <i class="fas fa-circle text-success"></i>
+                                <span>Warszawa</span>
+                            </div>
+                            <div class="route-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="city-to">
+                                <i class="fas fa-circle text-danger"></i>
+                                <span>Kraków</span>
+                            </div>
+                        </div>
+                        <div class="route-badge">
+                            <i class="fas fa-star"></i>
+                            Popularna
+                        </div>
+                    </div>
+                    
+                    <div class="route-details">
+                        <div class="route-info">
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <span>4h 30min</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>Codziennie</span>
+                            </div>
+                        </div>
+                        
+                        <div class="route-price">
+                            <span class="price-from">od</span>
+                            <span class="price-amount">45</span>
+                            <span class="price-currency">zł</span>
+                        </div>
+                    </div>
+                    
+                    <button class="route-btn">
+                        <span>Zobacz połączenia</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="route-card fade-in-up" data-delay="200">
+                    <div class="route-header">
+                        <div class="route-cities">
+                            <div class="city-from">
+                                <i class="fas fa-circle text-success"></i>
+                                <span>Gdańsk</span>
+                            </div>
+                            <div class="route-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="city-to">
+                                <i class="fas fa-circle text-danger"></i>
+                                <span>Warszawa</span>
+                            </div>
+                        </div>
+                        <div class="route-badge eco">
+                            <i class="fas fa-leaf"></i>
+                            Eco
+                        </div>
+                    </div>
+                    
+                    <div class="route-details">
+                        <div class="route-info">
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <span>5h 15min</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>6x dziennie</span>
+                            </div>
+                        </div>
+                        
+                        <div class="route-price">
+                            <span class="price-from">od</span>
+                            <span class="price-amount">55</span>
+                            <span class="price-currency">zł</span>
+                        </div>
+                    </div>
+                    
+                    <button class="route-btn">
+                        <span>Zobacz połączenia</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="route-card fade-in-up" data-delay="300">
+                    <div class="route-header">
+                        <div class="route-cities">
+                            <div class="city-from">
+                                <i class="fas fa-circle text-success"></i>
+                                <span>Wrocław</span>
+                            </div>
+                            <div class="route-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="city-to">
+                                <i class="fas fa-circle text-danger"></i>
+                                <span>Poznań</span>
+                            </div>
+                        </div>
+                        <div class="route-badge express">
+                            <i class="fas fa-bolt"></i>
+                            Express
+                        </div>
+                    </div>
+                    
+                    <div class="route-details">
+                        <div class="route-info">
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <span>2h 45min</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>4x dziennie</span>
+                            </div>
+                        </div>
+                        
+                        <div class="route-price">
+                            <span class="price-from">od</span>
+                            <span class="price-amount">38</span>
+                            <span class="price-currency">zł</span>
+                        </div>
+                    </div>
+                    
+                    <button class="route-btn">
+                        <span>Zobacz połączenia</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="about">
+        <div class="features-bg"></div>
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-badge">
+                    <i class="fas fa-award"></i>
+                    Dlaczego GreenLine
+                </div>
+                <h2 class="section-title">Podróżuj z pewnością</h2>
+                <p class="section-subtitle">
+                    Zapewniamy najwyższą jakość usług transportowych w Polsce
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in-up" data-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">100% Bezpieczeństwo</h3>
+                    <p class="feature-description">
+                        Nowoczesne autobusy wyposażone w najnowsze systemy bezpieczeństwa i monitoringu GPS.
+                    </p>
+                    <div class="feature-stats">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">wypadków w 2024</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in-up" data-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="feature-title">Punktualność</h3>
+                    <p class="feature-description">
+                        97% naszych autobusów przyjeżdża punktualnie. Śledzimy każdy kurs w czasie rzeczywistym.
+                    </p>
+                    <div class="feature-stats">
+                        <span class="stat-number">97%</span>
+                        <span class="stat-label">punktualność</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in-up" data-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="feature-title">Eko-transport</h3>
+                    <p class="feature-description">
+                        Flota autobusów Euro 6 z najniższą emisją spalin. Dbamy o środowisko i przyszłość planety.
+                    </p>
+                    <div class="feature-stats">
+                        <span class="stat-number">-40%</span>
+                        <span class="stat-label">emisji CO₂</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in-up" data-delay="400">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="feature-title">Wsparcie 24/7</h3>
+                    <p class="feature-description">
+                        Nasz zespół obsługi klienta jest dostępny przez całą dobę, gotowy pomóc w każdej sytuacji.
+                    </p>
+                    <div class="feature-stats">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">pomoc online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-pattern"></div>
+        
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <div class="footer-brand">
+                        <div class="brand-logo">
+                            <i class="fas fa-route brand-icon"></i>
+                            <span class="brand-text">GreenLine</span>
+                        </div>
+                        <p class="footer-description">
+                            Nowoczesny przewoźnik autobusowy oferujący komfortowe i ekologiczne podróże po całej Polsce. Łączymy miasta, łączymy ludzi.
+                        </p>
+                        <div class="footer-social">
+                            <a href="#" class="social-link">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4 class="footer-title">Podróże</h4>
+                        <ul class="footer-list">
+                            <li><a href="#" class="footer-link">Wyszukaj połączenia</a></li>
+                            <li><a href="#" class="footer-link">Popularne trasy</a></li>
+                            <li><a href="#" class="footer-link">Rozkłady jazdy</a></li>
+                            <li><a href="#" class="footer-link">Mapa połączeń</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-title">Pomoc</h4>
+                        <ul class="footer-list">
+                            <li><a href="#" class="footer-link">Centrum pomocy</a></li>
+                            <li><a href="#" class="footer-link">Często zadawane pytania</a></li>
+                            <li><a href="#" class="footer-link">Kontakt</a></li>
+                            <li><a href="#" class="footer-link">Reklamacje</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-title">Firma</h4>
+                        <ul class="footer-list">
+                            <li><a href="#" class="footer-link">O nas</a></li>
+                            <li><a href="#" class="footer-link">Kariera</a></li>
+                            <li><a href="#" class="footer-link">Dla mediów</a></li>
+                            <li><a href="#" class="footer-link">Partnerzy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-title">Kontakt</h4>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+48 800 123 456</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>info@greenline.pl</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>ul. Transportowa 123<br>00-001 Warszawa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="copyright">
+                        © 2025 GreenLine. Wszystkie prawa zastrzeżone.
+                    </p>
+                    <div class="footer-bottom-links">
+                        <a href="#" class="bottom-link">Regulamin</a>
+                        <a href="#" class="bottom-link">Polityka prywatności</a>
+                        <a href="#" class="bottom-link">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Wyszukiwanie połączeń</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="search-results">
+                    <div class="result-header">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <h4>Znaleźliśmy połączenia!</h4>
+                    </div>
+                    <p>Przekierowujemy do strony z wynikami wyszukiwania...</p>
+                    <div class="loading-bar">
+                        <div class="loading-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="modern-bus.js"></script>
+</body>
+</html>
