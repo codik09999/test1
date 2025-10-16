@@ -38,7 +38,7 @@
                     <div class="route-input">
                         <div class="input-group from-input">
                             <label>From</label>
-                            <div class="city-display">
+                            <div class="city-display" data-type="from">
                                 <span class="location-icon">📍</span>
                                 <span class="city-name">Warszawa</span>
                             </div>
@@ -48,7 +48,7 @@
                         
                         <div class="input-group to-input">
                             <label>To</label>
-                            <div class="city-display">
+                            <div class="city-display" data-type="to">
                                 <span class="location-icon">📍</span>
                                 <span class="city-name">Berlin</span>
                             </div>
@@ -73,6 +73,65 @@
                             <span class="passenger-icon">👤</span>
                             <span class="passenger-text">1 Adult</span>
                             <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <!-- Dropdown для пассажиров -->
+                        <div class="passengers-dropdown">
+                            <div class="passenger-type">
+                                <div class="passenger-label">
+                                    <span class="passenger-icon-small">👤</span>
+                                    <span>Adults</span>
+                                    <small>Age 18+</small>
+                                </div>
+                                <div class="passenger-controls">
+                                    <button class="passenger-btn minus" data-type="adults">-</button>
+                                    <span class="passenger-count" data-type="adults">1</span>
+                                    <button class="passenger-btn plus" data-type="adults">+</button>
+                                </div>
+                            </div>
+                            <div class="passenger-type">
+                                <div class="passenger-label">
+                                    <span class="passenger-icon-small">👶</span>
+                                    <span>Children</span>
+                                    <small>Age 2-17</small>
+                                </div>
+                                <div class="passenger-controls">
+                                    <button class="passenger-btn minus" data-type="children">-</button>
+                                    <span class="passenger-count" data-type="children">0</span>
+                                    <button class="passenger-btn plus" data-type="children">+</button>
+                                </div>
+                            </div>
+                            <div class="passenger-type">
+                                <div class="passenger-label">
+                                    <span class="passenger-icon-small">🍼</span>
+                                    <span>Infants</span>
+                                    <small>Under 2</small>
+                                </div>
+                                <div class="passenger-controls">
+                                    <button class="passenger-btn minus" data-type="infants">-</button>
+                                    <span class="passenger-count" data-type="infants">0</span>
+                                    <button class="passenger-btn plus" data-type="infants">+</button>
+                                </div>
+                            </div>
+                            <div class="passengers-actions">
+                                <button class="passengers-done-btn">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- City search modal -->
+                <div class="city-search-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Select City</h3>
+                            <button class="modal-close">×</button>
+                        </div>
+                        <div class="search-input-wrapper">
+                            <input type="text" class="city-search-input" placeholder="Search for a city...">
+                            <span class="search-icon">🔍</span>
+                        </div>
+                        <div class="city-suggestions">
+                            <!-- Cities will be populated here -->
                         </div>
                     </div>
                 </div>

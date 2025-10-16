@@ -65,7 +65,13 @@ class BusResultsPage {
     }
 
     initEventListeners() {
-        // Trip type selector removed
+        // City selection
+        const cityDisplays = document.querySelectorAll('.city-display');
+        cityDisplays.forEach(display => {
+            display.addEventListener('click', () => {
+                this.showCityModal(display.dataset.type);
+            });
+        });
 
         // Route swap button
         const swapBtn = document.querySelector('.swap-route-btn');
@@ -85,6 +91,23 @@ class BusResultsPage {
             nextBtn.addEventListener('click', () => this.changeDate(1));
         }
 
+        // Passengers dropdown
+        const passengersDisplay = document.querySelector('.passengers-display');
+        const passengersDropdown = document.querySelector('.passengers-dropdown');
+        
+        if (passengersDisplay) {
+            passengersDisplay.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.togglePassengersDropdown();
+            });
+        }
+
+        // Passengers controls
+        this.initPassengersControls();
+
+        // City modal controls
+        this.initCityModal();
+
         // Select buttons
         const selectButtons = document.querySelectorAll('.select-btn');
         selectButtons.forEach((btn, index) => {
@@ -97,12 +120,11 @@ class BusResultsPage {
             loadMoreBtn.addEventListener('click', this.loadMoreResults.bind(this));
         }
 
-        // Search inputs (simulate functionality)
-        const searchInputs = document.querySelectorAll('.city-display, .date-display, .passengers-display');
-        searchInputs.forEach(input => {
-            input.addEventListener('click', () => {
-                this.showSearchModal(input.closest('.input-group'));
-            });
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.passengers-input')) {
+                this.hidePassengersDropdown();
+            }
         });
     }
 
@@ -126,7 +148,259 @@ class BusResultsPage {
         });
     }
 
-    // Trip type methods removed
+    // === PASSENGERS FUNCTIONALITY ===
+    initPassengersControls() {
+        this.passengerCounts = {
+            adults: 1,
+            children: 0,
+            infants: 0
+        };
+
+        // Plus/minus buttons
+        document.querySelectorAll('.passenger-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const type = btn.dataset.type;
+                const isPlus = btn.classList.contains('plus');
+                this.updatePassengerCount(type, isPlus ? 1 : -1);
+            });
+        });
+
+        // Done button
+        const doneBtn = document.querySelector('.passengers-done-btn');
+        if (doneBtn) {
+            doneBtn.addEventListener('click', () => {
+                this.hidePassengersDropdown();
+                this.searchBuses();
+            });
+        }
+
+        this.updatePassengersDisplay();
+    }
+
+    updatePassengerCount(type, change) {
+        const currentCount = this.passengerCounts[type];
+        const newCount = Math.max(0, currentCount + change);
+        
+        // Validation
+        if (type === 'adults' && newCount === 0) {
+            return; // At least one adult required
+        }
+        if (newCount > 9) {
+            return; // Maximum 9 passengers
+        }
+
+        this.passengerCounts[type] = newCount;
+        this.updatePassengersDisplay();
+        this.updatePassengersButtons();
+    }
+
+    updatePassengersDisplay() {
+        const total = Object.values(this.passengerCounts).reduce((sum, count) => sum + count, 0);
+        const passengerText = document.querySelector('.passenger-text');
+        
+        if (passengerText) {
+            let text = '';
+            if (this.passengerCounts.adults > 0) {
+                text += `${this.passengerCounts.adults} Adult${this.passengerCounts.adults > 1 ? 's' : ''}`;
+            }
+            if (this.passengerCounts.children > 0) {
+                text += text ? `, ${this.passengerCounts.children} Child${this.passengerCounts.children > 1 ? 'ren' : ''}` : `${this.passengerCounts.children} Child${this.passengerCounts.children > 1 ? 'ren' : ''}`;
+            }
+            if (this.passengerCounts.infants > 0) {
+                text += text ? `, ${this.passengerCounts.infants} Infant${this.passengerCounts.infants > 1 ? 's' : ''}` : `${this.passengerCounts.infants} Infant${this.passengerCounts.infants > 1 ? 's' : ''}`;
+            }
+            
+            passengerText.textContent = text || '0 Passengers';
+        }
+
+        // Update counts in dropdown
+        Object.keys(this.passengerCounts).forEach(type => {
+            const countElement = document.querySelector(`.passenger-count[data-type="${type}"]`);
+            if (countElement) {
+                countElement.textContent = this.passengerCounts[type];
+            }
+        });
+    }
+
+    updatePassengersButtons() {
+        Object.keys(this.passengerCounts).forEach(type => {
+            const minusBtn = document.querySelector(`.passenger-btn.minus[data-type="${type}"]`);
+            const plusBtn = document.querySelector(`.passenger-btn.plus[data-type="${type}"]`);
+            const count = this.passengerCounts[type];
+            const total = Object.values(this.passengerCounts).reduce((sum, count) => sum + count, 0);
+            
+            if (minusBtn) {
+                minusBtn.disabled = (type === 'adults' && count <= 1) || count === 0;
+            }
+            if (plusBtn) {
+                plusBtn.disabled = total >= 9;
+            }
+        });
+    }
+
+    togglePassengersDropdown() {
+        const dropdown = document.querySelector('.passengers-dropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('show');
+            if (dropdown.classList.contains('show')) {
+                this.updatePassengersButtons();
+            }
+        }
+    }
+
+    hidePassengersDropdown() {
+        const dropdown = document.querySelector('.passengers-dropdown');
+        if (dropdown) {
+            dropdown.classList.remove('show');
+        }
+    }
+
+    // === CITY SEARCH FUNCTIONALITY ===
+    initCityModal() {
+        this.currentCityType = null;
+        this.popularCities = [
+            { name: 'Warszawa', country: 'Poland', popular: true },
+            { name: 'Kraków', country: 'Poland', popular: true },
+            { name: 'Gdańsk', country: 'Poland', popular: true },
+            { name: 'Wrocław', country: 'Poland', popular: true },
+            { name: 'Berlin', country: 'Germany', popular: true },
+            { name: 'Praha', country: 'Czech Republic', popular: true },
+            { name: 'Vienna', country: 'Austria', popular: true },
+            { name: 'Budapest', country: 'Hungary', popular: true },
+            { name: 'Amsterdam', country: 'Netherlands', popular: false },
+            { name: 'Paris', country: 'France', popular: false },
+            { name: 'London', country: 'United Kingdom', popular: false }
+        ];
+
+        // Modal close button
+        const closeBtn = document.querySelector('.modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.hideCityModal());
+        }
+
+        // City search input
+        const searchInput = document.querySelector('.city-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.filterCities(e.target.value);
+            });
+        }
+
+        // Close modal on backdrop click
+        const modal = document.querySelector('.city-search-modal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.hideCityModal();
+                }
+            });
+        }
+    }
+
+    showCityModal(type) {
+        this.currentCityType = type;
+        const modal = document.querySelector('.city-search-modal');
+        const searchInput = document.querySelector('.city-search-input');
+        const title = document.querySelector('.city-search-modal h3');
+        
+        if (modal) {
+            modal.classList.add('show');
+            if (title) {
+                title.textContent = type === 'from' ? 'Select Departure City' : 'Select Arrival City';
+            }
+            if (searchInput) {
+                searchInput.value = '';
+                setTimeout(() => searchInput.focus(), 300);
+            }
+            this.displayCities(this.popularCities.filter(city => city.popular));
+        }
+    }
+
+    hideCityModal() {
+        const modal = document.querySelector('.city-search-modal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+
+    filterCities(query) {
+        if (!query.trim()) {
+            this.displayCities(this.popularCities.filter(city => city.popular));
+            return;
+        }
+
+        const filtered = this.popularCities.filter(city =>
+            city.name.toLowerCase().includes(query.toLowerCase()) ||
+            city.country.toLowerCase().includes(query.toLowerCase())
+        ).slice(0, 8);
+
+        this.displayCities(filtered);
+    }
+
+    displayCities(cities) {
+        const container = document.querySelector('.city-suggestions');
+        if (!container) return;
+
+        container.innerHTML = '';
+        
+        cities.forEach(city => {
+            const suggestion = document.createElement('div');
+            suggestion.className = 'city-suggestion';
+            suggestion.innerHTML = `
+                <span class="suggestion-icon">📍</span>
+                <div class="suggestion-details">
+                    <div class="suggestion-name">${city.name}</div>
+                    <div class="suggestion-country">${city.country}</div>
+                </div>
+            `;
+
+            suggestion.addEventListener('click', () => {
+                this.selectCity(city.name);
+            });
+
+            container.appendChild(suggestion);
+        });
+    }
+
+    selectCity(cityName) {
+        if (!this.currentCityType) return;
+
+        const cityElement = document.querySelector(`[data-type="${this.currentCityType}"] .city-name`);
+        if (cityElement) {
+            cityElement.textContent = cityName;
+        }
+
+        this.hideCityModal();
+        
+        // Update search parameters
+        if (this.currentCityType === 'from') {
+            this.searchParams.from = cityName;
+        } else {
+            this.searchParams.to = cityName;
+        }
+
+        // Update bus cards with new cities
+        this.updateBusCities();
+        
+        // Trigger new search
+        setTimeout(() => {
+            this.searchBuses();
+        }, 300);
+    }
+
+    updateBusCities() {
+        const departureCities = document.querySelectorAll('.departure-city');
+        const arrivalCities = document.querySelectorAll('.arrival-city');
+        
+        departureCities.forEach(element => {
+            element.textContent = this.searchParams.from;
+        });
+        
+        arrivalCities.forEach(element => {
+            element.textContent = this.searchParams.to;
+        });
+    }
 
     swapRoute() {
         const fromCity = document.querySelector('.from-input .city-name');
