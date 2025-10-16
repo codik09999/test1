@@ -471,44 +471,6 @@ function getPopularDates() {
     return popularDates;
 }
 
-// Функция для создания календаря
-function createCalendar(month, year) {
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const today = new Date();
-    
-    let calendar = '<div class="calendar-grid">';
-    
-    // Заголовки дней недели
-    const dayNames = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb'];
-    dayNames.forEach(day => {
-        calendar += `<div class="calendar-day-header">${day}</div>`;
-    });
-    
-    // Пустые ячейки для выравнивания
-    const startDay = firstDay === 0 ? 6 : firstDay - 1; // Понедельник = 0
-    for (let i = 0; i < startDay; i++) {
-        calendar += '<div class="calendar-day empty"></div>';
-    }
-    
-    // Дни месяца
-    for (let day = 1; day <= daysInMonth; day++) {
-        const date = new Date(year, month, day);
-        const isToday = date.toDateString() === today.toDateString();
-        const isPast = date < today && !isToday;
-        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-        
-        let classes = 'calendar-day';
-        if (isToday) classes += ' today';
-        if (isPast) classes += ' past';
-        if (isWeekend) classes += ' weekend';
-        
-        calendar += `<div class="${classes}" data-date="${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}">${day}</div>`;
-    }
-    
-    calendar += '</div>';
-    return calendar;
-}
 
 // Функция для создания date picker
 function createDatePicker(inputElement) {
@@ -522,45 +484,54 @@ function createDatePicker(inputElement) {
         wrapper.appendChild(dropdown);
     }
     
-    let currentDate = new Date();
-    let currentMonth = currentDate.getMonth();
-    let currentYear = currentDate.getFullYear();
+    
+    let currentStartIndex = 0;
+    const maxVisibleDates = 7;
     
     function renderDatePicker() {
         const popularDates = getPopularDates();
-        const monthNames = [
-            'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
-            'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
-        ];
+        const visibleDates = popularDates.slice(currentStartIndex, currentStartIndex + maxVisibleDates);
+        const canScrollLeft = currentStartIndex > 0;
+        const canScrollRight = currentStartIndex + maxVisibleDates < popularDates.length;
         
         dropdown.innerHTML = `
             <div class="datepicker-content">
                 <div class="popular-dates-section">
-                    <h4 class="section-title">Popularne daty</h4>
-                    <div class="popular-dates">
-                        ${popularDates.slice(0, 7).map(dateObj => `
-                            <div class="popular-date-item ${dateObj.isToday ? 'today' : ''} ${dateObj.isWeekend ? 'weekend' : ''}" 
-                                 data-date="${dateObj.date.toISOString().split('T')[0]}">
-                                <div class="date-label">${dateObj.label}</div>
-                                <div class="date-info">
-                                    <span class="day-name">${dateObj.dayName}</span>
-                                    <span class="day-number">${dateObj.dayNumber}</span>
-                                    <span class="month">${dateObj.month}</span>
+                    <div class="section-header">
+                        <h4 class="section-title">Popularne daty</h4>
+                        <div class="navigation-buttons">
+                            <button class="nav-btn prev ${!canScrollLeft ? 'disabled' : ''}" ${!canScrollLeft ? 'disabled' : ''}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                            <button class="nav-btn next ${!canScrollRight ? 'disabled' : ''}" ${!canScrollRight ? 'disabled' : ''}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="popular-dates-container">
+                        <div class="popular-dates" style="transform: translateX(0px)">
+                            ${visibleDates.map(dateObj => `
+                                <div class="popular-date-item ${dateObj.isToday ? 'today' : ''} ${dateObj.isWeekend ? 'weekend' : ''}" 
+                                     data-date="${dateObj.date.toISOString().split('T')[0]}">
+                                    <div class="date-label">${dateObj.label}</div>
+                                    <div class="date-info">
+                                        <span class="day-name">${dateObj.dayName}</span>
+                                        <span class="day-number">${dateObj.dayNumber}</span>
+                                        <span class="month">${dateObj.month}</span>
+                                    </div>
                                 </div>
-                            </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="dates-indicator">
+                        ${Array.from({ length: Math.ceil(popularDates.length / maxVisibleDates) }, (_, i) => `
+                            <div class="indicator-dot ${Math.floor(currentStartIndex / maxVisibleDates) === i ? 'active' : ''}"></div>
                         `).join('')}
                     </div>
-                </div>
-                
-                <div class="calendar-section">
-                    <div class="calendar-header">
-                        <button class="calendar-nav prev" data-action="prev">‹</button>
-                        <div class="calendar-month-year">
-                            ${monthNames[currentMonth]} ${currentYear}
-                        </div>
-                        <button class="calendar-nav next" data-action="next">›</button>
-                    </div>
-                    ${createCalendar(currentMonth, currentYear)}
                 </div>
             </div>
         `;
@@ -575,37 +546,36 @@ function createDatePicker(inputElement) {
             });
         });
         
-        // Обработчики для дней календаря
-        dropdown.querySelectorAll('.calendar-day:not(.empty):not(.past)').forEach(day => {
-            day.addEventListener('click', () => {
-                const dateValue = day.dataset.date;
-                if (dateValue) {
-                    inputElement.value = dateValue;
-                    dropdown.style.display = 'none';
-                    dropdown.classList.remove('show');
+        // Обработчики навигации
+        const prevBtn = dropdown.querySelector('.nav-btn.prev');
+        const nextBtn = dropdown.querySelector('.nav-btn.next');
+        
+        if (prevBtn && !prevBtn.disabled) {
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentStartIndex > 0) {
+                    currentStartIndex = Math.max(0, currentStartIndex - maxVisibleDates);
+                    renderDatePicker();
                 }
             });
-        });
+        }
         
-        // Обработчики навигации календаря
-        dropdown.querySelector('.calendar-nav.prev').addEventListener('click', (e) => {
-            e.preventDefault();
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderDatePicker();
-        });
+        if (nextBtn && !nextBtn.disabled) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentStartIndex + maxVisibleDates < popularDates.length) {
+                    currentStartIndex = Math.min(popularDates.length - maxVisibleDates, currentStartIndex + maxVisibleDates);
+                    renderDatePicker();
+                }
+            });
+        }
         
-        dropdown.querySelector('.calendar-nav.next').addEventListener('click', (e) => {
-            e.preventDefault();
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderDatePicker();
+        // Обработчики индикаторов
+        dropdown.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentStartIndex = index * maxVisibleDates;
+                renderDatePicker();
+            });
         });
     }
     
