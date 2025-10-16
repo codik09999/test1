@@ -446,8 +446,8 @@ function getPopularDates() {
     const today = new Date();
     const popularDates = [];
     
-    // Добавляем сегодня и следующие дни
-    for (let i = 0; i < 14; i++) {
+    // Добавляем сегодня и следующие 30 дней (месяц вперед)
+    for (let i = 0; i < 30; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
         
@@ -498,7 +498,12 @@ function createDatePicker(inputElement) {
             <div class="datepicker-content">
                 <div class="popular-dates-section">
                     <div class="section-header">
-                        <h4 class="section-title">Popularne daty</h4>
+                        <div class="section-info">
+                            <h4 class="section-title">Popularne daty</h4>
+                            <div class="date-range-info">
+                                ${visibleDates.length > 0 ? `${visibleDates[0].dayNumber} ${visibleDates[0].month} - ${visibleDates[visibleDates.length - 1].dayNumber} ${visibleDates[visibleDates.length - 1].month}` : ''}
+                            </div>
+                        </div>
                         <div class="navigation-buttons">
                             <button class="nav-btn prev ${!canScrollLeft ? 'disabled' : ''}" ${!canScrollLeft ? 'disabled' : ''}>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -553,6 +558,7 @@ function createDatePicker(inputElement) {
         if (prevBtn && !prevBtn.disabled) {
             prevBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation(); // Предотвращаем всплытие события
                 if (currentStartIndex > 0) {
                     currentStartIndex = Math.max(0, currentStartIndex - maxVisibleDates);
                     renderDatePicker();
@@ -563,6 +569,7 @@ function createDatePicker(inputElement) {
         if (nextBtn && !nextBtn.disabled) {
             nextBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation(); // Предотвращаем всплытие события
                 if (currentStartIndex + maxVisibleDates < popularDates.length) {
                     currentStartIndex = Math.min(popularDates.length - maxVisibleDates, currentStartIndex + maxVisibleDates);
                     renderDatePicker();
@@ -572,7 +579,9 @@ function createDatePicker(inputElement) {
         
         // Обработчики индикаторов
         dropdown.querySelectorAll('.indicator-dot').forEach((dot, index) => {
-            dot.addEventListener('click', () => {
+            dot.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Предотвращаем всплытие события
                 currentStartIndex = index * maxVisibleDates;
                 renderDatePicker();
             });
@@ -592,6 +601,11 @@ function createDatePicker(inputElement) {
     // Обработчики событий
     inputElement.addEventListener('focus', showDatePicker);
     inputElement.addEventListener('click', showDatePicker);
+    
+    // Предотвращаем закрытие при клике внутри dropdown
+    dropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
     
     // Скрыть при клике вне элемента
     document.addEventListener('click', (e) => {
