@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Confirmed - BusTravel</title>
+  <link rel="stylesheet" href="confirmation.css?v=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">BusTravel</a>
+      <div class="steps">
+        <span class="step done">Search</span>
+        <span class="step done">Seats</span>
+        <span class="step done">Payment</span>
+        <span class="step done">Confirmed</span>
+      </div>
+    </div>
+  </nav>
+
+  <section class="confirmation-section">
+    <div class="container">
+      <div class="success-animation">
+        <div class="checkmark-circle">
+          <div class="checkmark"></div>
+        </div>
+      </div>
+
+      <div class="confirmation-content">
+        <h1>Payment Successful!</h1>
+        <p class="success-message">Your bus ticket has been confirmed. We've sent the details to your email.</p>
+        
+        <div class="booking-details">
+          <div class="booking-header">
+            <h2>Booking Details</h2>
+            <div class="booking-id" id="bookingId">Loading...</div>
+          </div>
+          
+          <div class="trip-info">
+            <div class="route-display" id="routeDisplay">
+              <div class="route-point">
+                <div class="city">Loading...</div>
+                <div class="time">--:--</div>
+                <div class="station">Loading...</div>
+              </div>
+              <div class="route-arrow">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="duration">--h --m</span>
+              </div>
+              <div class="route-point">
+                <div class="city">Loading...</div>
+                <div class="time">--:--</div>
+                <div class="station">Loading...</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="booking-info">
+            <div class="info-row">
+              <span class="label">Travel Date:</span>
+              <span class="value" id="travelDate">Loading...</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Selected Seats:</span>
+              <span class="value" id="selectedSeats">Loading...</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Total Paid:</span>
+              <span class="value price" id="totalPaid">€0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ticket-actions">
+          <button class="download-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Download Ticket
+          </button>
+          <button class="email-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Email Ticket
+          </button>
+        </div>
+
+        <div class="next-steps">
+          <h3>What's Next?</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-icon">📧</div>
+              <div class="step-text">
+                <strong>Check your email</strong>
+                <p>We've sent your ticket and booking confirmation</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-icon">📱</div>
+              <div class="step-text">
+                <strong>Save your ticket</strong>
+                <p>Download or screenshot your ticket for easy access</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-icon">🚌</div>
+              <div class="step-text">
+                <strong>Arrive 15 minutes early</strong>
+                <p>Be at the departure point 15 minutes before departure</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <a href="index.html" class="secondary-btn">Book Another Trip</a>
+          <a href="#" class="primary-btn">My Bookings</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="confirmation.js?v=1"></script>
+</body>
+</html>
