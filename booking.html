@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking - BusTravel</title>
+    <link rel="stylesheet" href="booking.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">BusTravel</a>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Wyszukaj</a>
+                <a href="#" class="nav-link">Moje bilety</a>
+                <a href="#" class="nav-link">Pomoc</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="lang-btn">PL</button>
+                <button class="login-btn">Zaloguj</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Seat Reservation Section -->
+    <section class="seat-reservation">
+        <div class="container">
+            <!-- Header -->
+            <div class="reservation-header">
+                <div class="header-content">
+                    <button class="back-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <div class="header-info">
+                        <h1>Seat Reservation</h1>
+                        <p class="route-info">
+                            <span class="from-city">Warszawa</span> — <span class="to-city">Berlin</span>
+                        </p>
+                    </div>
+                    <button class="close-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Seat Types -->
+            <div class="seat-types">
+                <div class="seat-type-option selected">
+                    <div class="seat-icon classic"></div>
+                    <div class="seat-type-info">
+                        <span class="type-name">Classic</span>
+                        <span class="type-price">Free</span>
+                    </div>
+                </div>
+                <div class="seat-type-option">
+                    <div class="seat-icon front">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 6L12 2M12 6L8 10M12 6L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="seat-type-info">
+                        <span class="type-name">Front</span>
+                        <span class="type-price">Free</span>
+                    </div>
+                </div>
+                <div class="seat-type-option">
+                    <div class="seat-icon panorama">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="seat-type-info">
+                        <span class="type-name">Panorama</span>
+                        <span class="type-price">Free</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bus Layout -->
+            <div class="bus-container">
+                <div class="bus-layout">
+                    <!-- Driver section -->
+                    <div class="driver-section">
+                        <div class="steering-wheel">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="#64748b" stroke-width="2"/>
+                                <circle cx="12" cy="12" r="3" stroke="#64748b" stroke-width="2"/>
+                                <path d="M12 2V6M12 18V22M2 12H6M18 12H22" stroke="#64748b" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="dashboard"></div>
+                    </div>
+
+                    <!-- Navigation arrows -->
+                    <div class="bus-navigation">
+                        <button class="nav-arrow prev" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                        <button class="nav-arrow next">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Seat rows -->
+                    <div class="seat-rows" id="seatRows">
+                        <!-- Seats will be generated by JavaScript -->
+                    </div>
+
+                    <!-- Footer section -->
+                    <div class="bus-footer">
+                        <div class="toilet-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect x="4" y="4" width="16" height="16" rx="2" stroke="#64748b" stroke-width="2"/>
+                                <path d="M10 10H14M10 14H14" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="exit-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9M16 17L21 12M21 12L16 7M21 12H9" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom panel -->
+            <div class="bottom-panel">
+                <div class="selection-info">
+                    <span class="selected-count">0 seats reserved</span>
+                </div>
+                <button class="confirm-btn" disabled>Confirm</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="booking.js?v=2"></script>
+</body>
+</html>

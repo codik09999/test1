@@ -138,7 +138,11 @@ class BusResultsPage {
         // Select buttons
         const selectButtons = document.querySelectorAll('.select-btn');
         selectButtons.forEach((btn, index) => {
-            btn.addEventListener('click', () => this.selectBus(index));
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('Button clicked:', index);
+                this.selectBus(index);
+            });
         });
 
         // Load more button
@@ -717,20 +721,58 @@ class BusResultsPage {
     proceedToBooking(busIndex) {
         // Show loading state
         const btn = document.querySelectorAll('.select-btn')[busIndex];
+        if (!btn) {
+            console.error('Button not found for index:', busIndex);
+            return;
+        }
+        
         const originalText = btn.textContent;
         btn.textContent = 'Loading...';
         btn.disabled = true;
         
-        // Simulate API call
-        setTimeout(() => {
-            // In a real app, this would navigate to booking page
-            console.log(`Proceeding to booking for bus ${busIndex}`);
-            alert('Redirecting to booking page...');
-            
-            // Reset button
+        console.log('Starting booking process for bus:', busIndex);
+        
+        // Get bus information
+        const busOptions = document.querySelectorAll('.bus-option');
+        const selectedBus = busOptions[busIndex];
+        
+        if (!selectedBus) {
+            console.error('Bus option not found for index:', busIndex);
             btn.textContent = originalText;
             btn.disabled = false;
-        }, 1500);
+            return;
+        }
+        
+        // Collect booking data
+        const bookingData = {
+            from: this.searchParams.from,
+            to: this.searchParams.to,
+            date: this.searchParams.date,
+            passengers: this.passengerCounts,
+            busIndex: busIndex,
+            departureTime: selectedBus.querySelector('.departure .time')?.textContent || '',
+            arrivalTime: selectedBus.querySelector('.arrival .time')?.textContent || '',
+            duration: selectedBus.querySelector('.duration')?.textContent || '',
+            price: selectedBus.querySelector('.price')?.textContent || ''
+        };
+        
+        console.log('Booking data collected:', bookingData);
+        
+        // Store booking data in localStorage
+        localStorage.setItem('bookingData', JSON.stringify(bookingData));
+        
+        // Simulate API call then redirect
+        setTimeout(() => {
+            console.log('Redirecting to booking page...');
+            try {
+                window.location.href = 'booking.html';
+            } catch (error) {
+                console.error('Redirect failed:', error);
+                // Fallback - restore button state
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }, 1000); // Уменьшили время ожидания
     }
 
     loadMoreResults() {
