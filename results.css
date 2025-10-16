@@ -111,7 +111,7 @@ body {
 
 .search-inputs {
     display: grid;
-    grid-template-columns: 1fr auto 80px 120px;
+    grid-template-columns: 1fr auto 200px 140px;
     gap: 16px;
     align-items: end;
 }
@@ -152,6 +152,42 @@ body {
     cursor: pointer;
     transition: all 0.2s ease;
     min-height: 48px;
+    position: relative;
+}
+
+.passengers-display {
+    justify-content: space-between;
+    min-width: 120px;
+}
+
+.passenger-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.passenger-count-display {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e40af;
+}
+
+.passenger-type-display {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.passenger-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.passenger-icon {
+    font-size: 20px;
+    color: #1e40af;
 }
 
 .city-display:hover, .date-display:hover, .passengers-display:hover {

@@ -4,6 +4,11 @@ class BusResultsPage {
         this.currentDate = new Date();
         this.isLoading = false;
         this.searchParams = this.parseUrlParams();
+        this.passengerCounts = {
+            adults: 1,
+            children: 0,
+            infants: 0
+        };
         this.init();
     }
     
@@ -36,11 +41,15 @@ class BusResultsPage {
         // Trip type selector removed
         
         // Обновляем пассажиров
-        const passengerText = document.querySelector('.passenger-text');
-        if (passengerText) {
-            const count = this.searchParams.passengers;
-            const text = count === '1' ? '1 Adult' : `${count} Adults`;
-            passengerText.textContent = text;
+        const countDisplay = document.querySelector('.passenger-count-display');
+        const typeDisplay = document.querySelector('.passenger-type-display');
+        if (countDisplay && typeDisplay) {
+            const count = parseInt(this.searchParams.passengers) || 1;
+            countDisplay.textContent = count;
+            typeDisplay.textContent = count === 1 ? 'Adult' : 'Adults';
+            
+            // Обновляем внутренний счетчик
+            this.passengerCounts.adults = count;
         }
         
         // Обновляем дату
@@ -150,11 +159,6 @@ class BusResultsPage {
 
     // === PASSENGERS FUNCTIONALITY ===
     initPassengersControls() {
-        this.passengerCounts = {
-            adults: 1,
-            children: 0,
-            infants: 0
-        };
 
         // Plus/minus buttons
         document.querySelectorAll('.passenger-btn').forEach(btn => {
@@ -197,21 +201,37 @@ class BusResultsPage {
 
     updatePassengersDisplay() {
         const total = Object.values(this.passengerCounts).reduce((sum, count) => sum + count, 0);
-        const passengerText = document.querySelector('.passenger-text');
+        const countDisplay = document.querySelector('.passenger-count-display');
+        const typeDisplay = document.querySelector('.passenger-type-display');
         
-        if (passengerText) {
-            let text = '';
-            if (this.passengerCounts.adults > 0) {
-                text += `${this.passengerCounts.adults} Adult${this.passengerCounts.adults > 1 ? 's' : ''}`;
-            }
-            if (this.passengerCounts.children > 0) {
-                text += text ? `, ${this.passengerCounts.children} Child${this.passengerCounts.children > 1 ? 'ren' : ''}` : `${this.passengerCounts.children} Child${this.passengerCounts.children > 1 ? 'ren' : ''}`;
-            }
-            if (this.passengerCounts.infants > 0) {
-                text += text ? `, ${this.passengerCounts.infants} Infant${this.passengerCounts.infants > 1 ? 's' : ''}` : `${this.passengerCounts.infants} Infant${this.passengerCounts.infants > 1 ? 's' : ''}`;
+        if (countDisplay && typeDisplay) {
+            countDisplay.textContent = total;
+            
+            // Determine the display text based on passenger composition
+            let displayText = '';
+            if (total === 1) {
+                if (this.passengerCounts.adults === 1) {
+                    displayText = 'Adult';
+                } else if (this.passengerCounts.children === 1) {
+                    displayText = 'Child';
+                } else if (this.passengerCounts.infants === 1) {
+                    displayText = 'Infant';
+                }
+            } else {
+                const parts = [];
+                if (this.passengerCounts.adults > 0) {
+                    parts.push(`${this.passengerCounts.adults} Adult${this.passengerCounts.adults > 1 ? 's' : ''}`);
+                }
+                if (this.passengerCounts.children > 0) {
+                    parts.push(`${this.passengerCounts.children} Child${this.passengerCounts.children > 1 ? 'ren' : ''}`);
+                }
+                if (this.passengerCounts.infants > 0) {
+                    parts.push(`${this.passengerCounts.infants} Infant${this.passengerCounts.infants > 1 ? 's' : ''}`);
+                }
+                displayText = parts.length > 1 ? 'Mixed' : (parts[0] || 'Passengers').replace(/\d+\s/, '');
             }
             
-            passengerText.textContent = text || '0 Passengers';
+            typeDisplay.textContent = displayText;
         }
 
         // Update counts in dropdown
