@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment - BusTravel</title>
+  <link rel="stylesheet" href="payment.css?v=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">BusTravel</a>
+      <div class="steps">
+        <span class="step done">Search</span>
+        <span class="step done">Seats</span>
+        <span class="step active">Payment</span>
+      </div>
+    </div>
+  </nav>
+
+  <section class="payment-section">
+    <div class="container">
+      <div class="layout">
+        <div class="card-form">
+          <h1>Card details</h1>
+
+          <div class="card-preview">
+            <div class="chip"></div>
+            <div class="card-number" id="previewNumber">•••• •••• •••• ••••</div>
+            <div class="card-bottom">
+              <div class="card-holder" id="previewHolder">CARD HOLDER</div>
+              <div class="card-expiry" id="previewExpiry">MM/YY</div>
+            </div>
+          </div>
+
+          <form id="paymentForm" novalidate>
+            <div class="form-row">
+              <label for="cardHolder">Name on card</label>
+              <input id="cardHolder" name="cardHolder" placeholder="John Doe" autocomplete="cc-name" required />
+              <small class="error" data-for="cardHolder"></small>
+            </div>
+
+            <div class="form-row">
+              <label for="cardNumber">Card number</label>
+              <input id="cardNumber" name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="19" required />
+              <small class="error" data-for="cardNumber"></small>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-row">
+                <label for="cardExpiry">Expiry</label>
+                <input id="cardExpiry" name="cardExpiry" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" required />
+                <small class="error" data-for="cardExpiry"></small>
+              </div>
+              <div class="form-row">
+                <label for="cardCvc">CVC</label>
+                <input id="cardCvc" name="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required />
+                <small class="error" data-for="cardCvc"></small>
+              </div>
+            </div>
+
+            <div class="consents">
+              <label class="checkbox">
+                <input type="checkbox" id="agree" required />
+                <span>I agree to the terms and conditions</span>
+              </label>
+            </div>
+
+            <button class="pay-btn" type="submit" disabled>
+              Pay and complete booking
+            </button>
+            <div class="secure-note">Secure payment • 256-bit SSL</div>
+          </form>
+        </div>
+
+        <aside class="summary">
+          <h2>Trip summary</h2>
+          <div class="route" id="routeSummary"></div>
+          <div class="seats" id="seatSummary"></div>
+          <div class="price" id="priceSummary"></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script src="payment.js?v=1"></script>
+</body>
+</html>

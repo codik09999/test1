@@ -235,8 +235,8 @@ class SeatReservation {
         const confirmMessage = `You have selected seats: ${seatList}\n\nWould you like to proceed?`;
         
         if (confirm(confirmMessage)) {
-            // Redirect to next step (passenger details or payment)
-            window.location.href = 'passenger-details.html';
+            // Redirect to payment step
+            window.location.href = 'payment.html';
         }
     }
 
