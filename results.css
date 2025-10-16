@@ -107,51 +107,7 @@ body {
     border: 1px solid #e2e8f0;
 }
 
-.trip-type-selector {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 24px;
-}
-
-.trip-type-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.trip-type-option input[type="radio"] {
-    display: none;
-}
-
-.option-circle {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #d1d5db;
-    border-radius: 50%;
-    position: relative;
-    transition: all 0.2s ease;
-}
-
-.trip-type-option.active .option-circle,
-.trip-type-option input[type="radio"]:checked + .option-circle {
-    border-color: #1e40af;
-    background: #1e40af;
-}
-
-.trip-type-option.active .option-circle::after,
-.trip-type-option input[type="radio"]:checked + .option-circle::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    background: white;
-    border-radius: 50%;
-}
+/* Trip type selector styles removed */
 
 .search-inputs {
     display: grid;

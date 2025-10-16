@@ -33,17 +33,7 @@ class BusResultsPage {
         if (fromCityElement) fromCityElement.textContent = this.searchParams.from;
         if (toCityElement) toCityElement.textContent = this.searchParams.to;
         
-        // Обновляем тип поездки
-        const tripTypeInputs = document.querySelectorAll('input[name="trip-type"]');
-        tripTypeInputs.forEach(input => {
-            if (input.value === this.searchParams.tripType) {
-                input.checked = true;
-                input.closest('.trip-type-option').classList.add('active');
-            } else {
-                input.checked = false;
-                input.closest('.trip-type-option').classList.remove('active');
-            }
-        });
+        // Trip type selector removed
         
         // Обновляем пассажиров
         const passengerText = document.querySelector('.passenger-text');
@@ -75,16 +65,7 @@ class BusResultsPage {
     }
 
     initEventListeners() {
-        // Trip type selector
-        const tripTypeOptions = document.querySelectorAll('.trip-type-option');
-        tripTypeOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                tripTypeOptions.forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-                option.querySelector('input[type="radio"]').checked = true;
-                this.handleTripTypeChange(option.querySelector('input[type="radio"]').value);
-            });
-        });
+        // Trip type selector removed
 
         // Route swap button
         const swapBtn = document.querySelector('.swap-route-btn');
@@ -145,25 +126,7 @@ class BusResultsPage {
         });
     }
 
-    handleTripTypeChange(type) {
-        console.log(`Trip type changed to: ${type}`);
-        // Add return date field if round trip is selected
-        if (type === 'return') {
-            this.showReturnDateField();
-        } else {
-            this.hideReturnDateField();
-        }
-    }
-
-    showReturnDateField() {
-        // Implementation for showing return date field
-        console.log('Showing return date field');
-    }
-
-    hideReturnDateField() {
-        // Implementation for hiding return date field
-        console.log('Hiding return date field');
-    }
+    // Trip type methods removed
 
     swapRoute() {
         const fromCity = document.querySelector('.from-input .city-name');
