@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Переход работает!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { font-size: 3em; margin-bottom: 20px; }
+        p { font-size: 1.2em; line-height: 1.6; }
+        .success { color: #00ff88; font-weight: bold; }
+        a { 
+            color: #00ff88; 
+            text-decoration: none; 
+            border: 2px solid #00ff88;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        a:hover {
+            background: #00ff88;
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Świetnie!</h1>
+        <p class="success">Переход на другую страницу работает корректно!</p>
+        <p>Это означает, что JavaScript редиректы функционируют правильно.</p>
+        <p>Теперь можно протестировать переход на страницу результатов поиска.</p>
+        <a href="index.html">← Powrót do strony głównej</a>
+        <a href="results.html">Sprawdź stronę wyników →</a>
+    </div>
+    
+    <script>
+        // Показываем URL параметры, если они есть
+        const params = new URLSearchParams(window.location.search);
+        if (params.toString()) {
+            const paramsList = document.createElement('div');
+            paramsList.style.marginTop = '20px';
+            paramsList.innerHTML = '<h3>Otrzymane parametry:</h3>';
+            
+            for (let [key, value] of params) {
+                paramsList.innerHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+            }
+            
+            document.querySelector('.container').appendChild(paramsList);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wybierz bilet - BusTravel</title>
+    <link rel="stylesheet" href="results.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">BusTravel</a>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Wyszukaj</a>
+                <a href="#" class="nav-link">Moje bilety</a>
+                <a href="#" class="nav-link">Pomoc</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="lang-btn">PL</button>
+                <button class="login-btn">Zaloguj</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Summary -->
+    <section class="search-summary">
+        <div class="container">
+            <div class="search-bar">
+                <div class="trip-type-selector">
+                    <label class="trip-type-option active">
+                        <input type="radio" name="trip-type" value="oneway" checked>
+                        <span class="option-circle"></span>
+                        <span>One Way</span>
+                    </label>
+                    <label class="trip-type-option">
+                        <input type="radio" name="trip-type" value="return">
+                        <span class="option-circle"></span>
+                        <span>Round Trip</span>
+                    </label>
+                </div>
+                
+                <div class="search-inputs">
+                    <div class="route-input">
+                        <div class="input-group from-input">
+                            <label>From</label>
+                            <div class="city-display">
+                                <span class="location-icon">📍</span>
+                                <span class="city-name">Warszawa</span>
+                            </div>
+                        </div>
+                        
+                        <button class="swap-route-btn">⇄</button>
+                        
+                        <div class="input-group to-input">
+                            <label>To</label>
+                            <div class="city-display">
+                                <span class="location-icon">📍</span>
+                                <span class="city-name">Berlin</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group date-input">
+                        <label>Departure</label>
+                        <div class="date-display">
+                            <span class="calendar-icon">📅</span>
+                            <span class="date-text">Today, 16 Oct</span>
+                            <div class="date-nav">
+                                <button class="date-nav-btn prev">‹</button>
+                                <button class="date-nav-btn next">›</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group passengers-input">
+                        <label>Passengers</label>
+                        <div class="passengers-display">
+                            <span class="passenger-icon">👤</span>
+                            <span class="passenger-text">1 Adult</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Date Selector -->
+            <div class="quick-dates">
+                <button class="quick-date-btn">Wed, 15 Oct</button>
+                <button class="quick-date-btn active">Thu, 16 Oct</button>
+                <button class="quick-date-btn">Fri, 17 Oct</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="container">
+            <div class="results-header">
+                <div class="results-info">
+                    <span class="currency-info">EUR | CHF</span>
+                    <span class="results-count">2 results</span>
+                </div>
+            </div>
+            
+            <div class="results-list">
+                <!-- Bus Option 1 -->
+                <div class="bus-option">
+                    <div class="bus-info">
+                        <div class="time-info">
+                            <div class="departure">
+                                <span class="time">20:15</span>
+                                <span class="location"><span class="departure-city">Warszawa</span> (Dworzec Centralny)</span>
+                            </div>
+                            
+                            <div class="journey-info">
+                                <span class="duration">13:10 hrs</span>
+                                <div class="journey-line"></div>
+                            </div>
+                            
+                            <div class="arrival">
+                                <span class="time">09:25 <small>+1 day</small></span>
+                                <span class="location"><span class="arrival-city">Berlin</span> (ZOB)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bus-details">
+                            <div class="transport-type">
+                                <span class="bus-icon">🚌</span>
+                                <span class="type-text">Bus</span>
+                                <span class="direct-badge">Direct</span>
+                            </div>
+                            <div class="amenities">
+                                <span class="amenity" title="Wi-Fi">📶</span>
+                                <span class="amenity" title="Power outlets">🔌</span>
+                                <span class="amenity" title="Air conditioning">❄️</span>
+                                <span class="availability">Almost full</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-info">
+                        <div class="price-section">
+                            <span class="price">€76<small>.98</small></span>
+                            <div class="price-badges">
+                                <span class="price-badge lowest">LOWEST PRICE</span>
+                                <span class="availability-warning">1 seat left at this price</span>
+                            </div>
+                        </div>
+                        <button class="select-btn">Continue</button>
+                    </div>
+                </div>
+                
+                <!-- Bus Option 2 -->
+                <div class="bus-option">
+                    <div class="bus-info">
+                        <div class="time-info">
+                            <div class="departure">
+                                <span class="time">20:40</span>
+                                <span class="location"><span class="departure-city">Warszawa</span> (PKS Stadion)</span>
+                            </div>
+                            
+                            <div class="journey-info">
+                                <span class="duration">12:45 hrs</span>
+                                <div class="journey-line"></div>
+                            </div>
+                            
+                            <div class="arrival">
+                                <span class="time">09:25 <small>+1 day</small></span>
+                                <span class="location"><span class="arrival-city">Berlin</span> (ZOB)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bus-details">
+                            <div class="transport-type">
+                                <span class="bus-icon">🚌</span>
+                                <span class="type-text">Bus</span>
+                                <span class="direct-badge">Direct</span>
+                            </div>
+                            <div class="amenities">
+                                <span class="amenity" title="Wi-Fi">📶</span>
+                                <span class="amenity" title="Power outlets">🔌</span>
+                                <span class="amenity" title="Air conditioning">❄️</span>
+                                <span class="availability">Almost full</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-info">
+                        <div class="price-section">
+                            <span class="price">€76<small>.98</small></span>
+                            <div class="price-badges">
+                                <span class="price-badge lowest">LOWEST PRICE</span>
+                                <span class="price-badge fastest">FASTEST TRIP</span>
+                                <span class="availability-warning">1 seat left at this price</span>
+                            </div>
+                        </div>
+                        <button class="select-btn">Continue</button>
+                    </div>
+                </div>
+                
+                <!-- More results placeholder -->
+                <div class="load-more">
+                    <button class="load-more-btn">
+                        <span>Show more results</span>
+                        <div class="load-icon">↓</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-minimal">
+        <div class="container">
+            <p>&copy; 2024 BusTravel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="results.js"></script>
+</body>
+</html>

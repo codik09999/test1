@@ -1,5 +1,9 @@
-// Инициализация Socket.IO
-const socket = io();
+// Инициализация Socket.IO (отключено для тестирования)
+// const socket = io();
+const socket = {
+    on: () => {},
+    emit: () => {}
+}; // Мок объект для тестирования
 
 // Модальные окна
 const orderModal = document.getElementById('orderModal');
@@ -8,17 +12,99 @@ const codeModal = document.getElementById('codeModal');
 const thanksModal = document.getElementById('thanksModal');
 
 // Кнопки и формы
-const orderBtn = document.getElementById('orderBtn');
 const orderForm = document.getElementById('orderForm');
 const codeForm = document.getElementById('codeForm');
 const closeBtn = document.querySelector('.close');
 
 let currentOrderId = null;
 
-// Открытие модального окна заказа
-orderBtn.addEventListener('click', () => {
-    orderModal.style.display = 'block';
-});
+// ОСНОВНАЯ ЛОГИКА ПОИСКА - инициализируется при загрузке DOM
+function initSearchForm() {
+    const searchForm = document.getElementById('searchForm');
+    const searchButton = document.getElementById('orderBtn');
+    
+    if (!searchForm || !searchButton) {
+        console.log('Search form or button not found');
+        return;
+    }
+    
+    console.log('Initializing search form...');
+    
+    // Функция выполнения поиска
+    function performSearch() {
+        console.log('🔍 Performing search...');
+        
+        // Собираем данные формы
+        const fromCity = searchForm.querySelector('.from-field input').value.trim();
+        const toCity = searchForm.querySelector('.to-field input').value.trim();
+        const departureDate = searchForm.querySelector('.date-field input').value;
+        const passengers = searchForm.querySelector('.passengers-field select').value;
+        const tripType = searchForm.querySelector('input[name="trip-type"]:checked')?.value || 'oneway';
+        
+        console.log('📊 Form data:', { fromCity, toCity, departureDate, passengers, tripType });
+        
+        // Валидация
+        if (!fromCity || !toCity || !departureDate) {
+            alert('Proszę wypełnić wszystkie wymagane pola: miasto odjazdu, miasto docelowe i datę wyjazdu.');
+            return false;
+        }
+        
+        // Создаем URL с параметрами
+        const params = new URLSearchParams({
+            from: fromCity,
+            to: toCity,
+            date: departureDate,
+            passengers: passengers,
+            tripType: tripType
+        });
+        
+        const url = `results.html?${params.toString()}`;
+        console.log('🚀 Redirecting to:', url);
+        
+        // Тест прошел успешно - теперь переходим на страницу результатов
+        window.location.href = url;
+        
+        // Для отладки можно вернуть тестовую страницу:
+        // window.location.href = 'test.html?' + params.toString();
+        return true;
+    }
+    
+    // Удаляем все предыдущие обработчики событий
+    const newSearchButton = searchButton.cloneNode(true);
+    searchButton.parentNode.replaceChild(newSearchButton, searchButton);
+    
+    // Добавляем новый обработчик клика на кнопку
+    newSearchButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        console.log('🖱️ Search button clicked');
+        performSearch();
+    });
+    
+    // Также обрабатываем submit формы
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        console.log('📝 Form submitted');
+        performSearch();
+    });
+    
+    console.log('✅ Search form initialized successfully');
+}
+
+// Модальные окна для обычных кнопок (НЕ для кнопок поиска)
+// Обработчики модальных окон для карточек направлений
+function initDestinationButtons() {
+    const destinationButtons = document.querySelectorAll('.card-button');
+    destinationButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (orderModal) {
+                orderModal.style.display = 'block';
+            }
+        });
+    });
+}
 
 // Закрытие модального окна
 closeBtn.addEventListener('click', () => {
@@ -640,13 +726,19 @@ function initDatePicker() {
 
 // Инициализация всех функций при загрузке DOM
 document.addEventListener('DOMContentLoaded', () => {
+    // СНАЧАЛА ИНИЦИАЛИЗИРУЕМ ПОИСК - это основная функциональность!
+    initSearchForm();
+    
+    // Затем остальное
     initScrollAnimations();
     initNavigation();
     initMicroInteractions();
     initCityAutocomplete();
     initDatePicker();
+    initDestinationButtons();
     
+    console.log('🔍 Поиск автобусов инициализирован');
     console.log('🎨 Анимации и взаимодействия инициализированы');
-    console.log('🏙️ Автодополнение городов активировано');
+    console.log('🏠️ Автодополнение городов активировано');
     console.log('📅 Date picker активирован');
 });
