@@ -955,15 +955,14 @@ body {
     display: none;
     position: absolute;
     top: 100%;
-    left: 0;
-    right: 0;
+    left: -50px;
     background: white;
     border: 1px solid #d1d5db;
     border-radius: 16px;
     box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     margin-top: 8px;
-    min-width: 400px;
+    width: 450px;
 }
 
 .datepicker-dropdown.show {
@@ -1050,16 +1049,17 @@ body {
 .popular-date-item {
     background: white;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 12px 8px;
+    border-radius: 10px;
+    padding: 8px 6px;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
-    min-height: 70px;
+    min-height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    gap: 2px;
+    position: relative;
 }
 
 .popular-date-item:hover {
@@ -1088,11 +1088,16 @@ body {
 }
 
 .date-label {
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 8px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: #f59e0b;
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
 }
 
 .popular-date-item.today .date-label {
@@ -1107,13 +1112,19 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 1px;
+    margin-top: 2px;
+}
+
+.popular-date-item:has(.date-label) .date-info {
+    margin-top: 8px;
 }
 
 .day-name {
-    font-size: 11px;
+    font-size: 10px;
     color: #64748b;
     font-weight: 500;
+    line-height: 1;
 }
 
 .popular-date-item.today .day-name,
@@ -1122,9 +1133,10 @@ body {
 }
 
 .day-number {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     color: #1e293b;
+    line-height: 1;
 }
 
 .popular-date-item.selected .day-number {
@@ -1132,9 +1144,10 @@ body {
 }
 
 .month {
-    font-size: 10px;
+    font-size: 9px;
     color: #64748b;
     font-weight: 500;
+    line-height: 1;
 }
 
 .popular-date-item.today .month,
