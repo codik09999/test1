@@ -11,9 +11,8 @@ class SeatReservation {
             ]
         };
         this.seatTypes = {
-            classic: { rows: [1, 2, 3, 4, 5, 6, 7, 8], price: 0 },
-            front: { rows: [1, 2], price: 0 },
-            panorama: { rows: [11, 12], price: 0 }
+            classic: { rows: [3, 4, 5, 6, 7, 8, 9, 10], price: 0 },
+            premium: { rows: [1, 2, 11, 12], price: 0 }
         };
         
         this.init();
@@ -136,8 +135,7 @@ class SeatReservation {
     }
 
     getSeatType(row) {
-        if (this.seatTypes.front.rows.includes(row)) return 'front';
-        if (this.seatTypes.panorama.rows.includes(row)) return 'panorama';
+        if (this.seatTypes.premium.rows.includes(row)) return 'premium';
         return 'classic';
     }
 
@@ -149,12 +147,6 @@ class SeatReservation {
             }
         });
 
-        // Seat type selection
-        document.querySelectorAll('.seat-type-option').forEach(option => {
-            option.addEventListener('click', (e) => {
-                this.selectSeatType(e.currentTarget);
-            });
-        });
 
         // Navigation buttons
         const backBtn = document.querySelector('.back-btn');
@@ -179,21 +171,6 @@ class SeatReservation {
             });
         }
 
-        // Bus navigation arrows
-        const prevBtn = document.querySelector('.nav-arrow.prev');
-        const nextBtn = document.querySelector('.nav-arrow.next');
-
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                this.scrollBusLayout('prev');
-            });
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                this.scrollBusLayout('next');
-            });
-        }
     }
 
     toggleSeat(seatElement) {
@@ -212,50 +189,30 @@ class SeatReservation {
         this.updateUI();
     }
 
-    selectSeatType(option) {
-        // Remove selected class from all options
-        document.querySelectorAll('.seat-type-option').forEach(opt => {
-            opt.classList.remove('selected');
-        });
-        
-        // Add selected class to clicked option
-        option.classList.add('selected');
-        
-        // Filter seats by type (optional functionality)
-        const selectedType = option.querySelector('.type-name').textContent.toLowerCase();
-        this.highlightSeatsByType(selectedType);
-    }
-
-    highlightSeatsByType(type) {
-        const seats = document.querySelectorAll('.seat');
-        
-        seats.forEach(seat => {
-            const row = parseInt(seat.dataset.seat);
-            const seatType = this.getSeatType(row);
-            
-            if (type === 'classic' || seatType === type) {
-                seat.style.opacity = '1';
-            } else {
-                seat.style.opacity = '0.3';
-            }
-        });
-        
-        // Reset opacity after 2 seconds
-        setTimeout(() => {
-            seats.forEach(seat => {
-                seat.style.opacity = '1';
-            });
-        }, 2000);
-    }
 
     updateUI() {
         const selectedCount = document.querySelector('.selected-count');
+        const selectedSeatsSpan = document.querySelector('.selected-seats');
         const confirmBtn = document.querySelector('.confirm-btn');
         
+        const count = this.selectedSeats.length;
+        
         if (selectedCount) {
-            const count = this.selectedSeats.length;
-            selectedCount.textContent = count === 0 ? '0 seats reserved' : 
-                count === 1 ? '1 seat reserved' : `${count} seats reserved`;
+            if (count === 0) {
+                selectedCount.textContent = 'No seats selected';
+            } else if (count === 1) {
+                selectedCount.textContent = '1 seat selected';
+            } else {
+                selectedCount.textContent = `${count} seats selected`;
+            }
+        }
+        
+        if (selectedSeatsSpan) {
+            if (count > 0) {
+                selectedSeatsSpan.textContent = `Seats: ${this.selectedSeats.join(', ')}`;
+            } else {
+                selectedSeatsSpan.textContent = '';
+            }
         }
         
         if (confirmBtn) {
@@ -263,35 +220,6 @@ class SeatReservation {
         }
     }
 
-    scrollBusLayout(direction) {
-        const seatRows = document.getElementById('seatRows');
-        if (!seatRows) return;
-        
-        const scrollAmount = 100;
-        const currentScroll = seatRows.scrollTop;
-        
-        if (direction === 'prev') {
-            seatRows.scrollTop = Math.max(0, currentScroll - scrollAmount);
-        } else {
-            seatRows.scrollTop = currentScroll + scrollAmount;
-        }
-        
-        this.updateNavigationButtons();
-    }
-
-    updateNavigationButtons() {
-        const seatRows = document.getElementById('seatRows');
-        const prevBtn = document.querySelector('.nav-arrow.prev');
-        const nextBtn = document.querySelector('.nav-arrow.next');
-        
-        if (!seatRows || !prevBtn || !nextBtn) return;
-        
-        const isAtTop = seatRows.scrollTop === 0;
-        const isAtBottom = seatRows.scrollTop >= seatRows.scrollHeight - seatRows.clientHeight;
-        
-        prevBtn.disabled = isAtTop;
-        nextBtn.disabled = isAtBottom;
-    }
 
     confirmSelection() {
         if (this.selectedSeats.length === 0) {

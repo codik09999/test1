@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking - BusTravel</title>
-    <link rel="stylesheet" href="booking.css?v=2">
+    <link rel="stylesheet" href="booking.css?v=3">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -53,36 +53,23 @@
                 </div>
             </div>
 
-            <!-- Seat Types -->
-            <div class="seat-types">
-                <div class="seat-type-option selected">
-                    <div class="seat-icon classic"></div>
-                    <div class="seat-type-info">
-                        <span class="type-name">Classic</span>
-                        <span class="type-price">Free</span>
-                    </div>
+            <!-- Seat Legend -->
+            <div class="seat-legend">
+                <div class="legend-item">
+                    <div class="legend-seat available"></div>
+                    <span>Available</span>
                 </div>
-                <div class="seat-type-option">
-                    <div class="seat-icon front">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 6L12 2M12 6L8 10M12 6L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="seat-type-info">
-                        <span class="type-name">Front</span>
-                        <span class="type-price">Free</span>
-                    </div>
+                <div class="legend-item">
+                    <div class="legend-seat selected"></div>
+                    <span>Selected</span>
                 </div>
-                <div class="seat-type-option">
-                    <div class="seat-icon panorama">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="seat-type-info">
-                        <span class="type-name">Panorama</span>
-                        <span class="type-price">Free</span>
-                    </div>
+                <div class="legend-item">
+                    <div class="legend-seat occupied"></div>
+                    <span>Occupied</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-seat premium"></div>
+                    <span>Premium</span>
                 </div>
             </div>
 
@@ -101,19 +88,6 @@
                         <div class="dashboard"></div>
                     </div>
 
-                    <!-- Navigation arrows -->
-                    <div class="bus-navigation">
-                        <button class="nav-arrow prev" disabled>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
-                        <button class="nav-arrow next">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
-                    </div>
 
                     <!-- Seat rows -->
                     <div class="seat-rows" id="seatRows">
@@ -137,16 +111,45 @@
                 </div>
             </div>
 
-            <!-- Bottom panel -->
-            <div class="bottom-panel">
-                <div class="selection-info">
-                    <span class="selected-count">0 seats reserved</span>
+            <!-- Trip Summary & Confirmation -->
+            <div class="trip-summary-card">
+                <div class="trip-info">
+                    <div class="trip-route">
+                        <div class="route-point">
+                            <div class="route-time">20:15</div>
+                            <div class="route-city from-city">Warszawa</div>
+                            <div class="route-station">Dworzec Centralny</div>
+                        </div>
+                        <div class="route-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="duration">13h 10m</span>
+                        </div>
+                        <div class="route-point">
+                            <div class="route-time">09:25 <small>+1</small></div>
+                            <div class="route-city to-city">Berlin</div>
+                            <div class="route-station">ZOB</div>
+                        </div>
+                    </div>
                 </div>
-                <button class="confirm-btn" disabled>Confirm</button>
+                
+                <div class="selection-summary">
+                    <div class="selection-info">
+                        <span class="selected-count">No seats selected</span>
+                        <span class="selected-seats"></span>
+                    </div>
+                    <button class="confirm-btn" disabled>
+                        <span>Continue</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 
-    <script src="booking.js?v=2"></script>
+    <script src="booking.js?v=3"></script>
 </body>
 </html>
