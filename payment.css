@@ -224,10 +224,21 @@ input.error {
   font-size: 0.8rem;
   font-weight: 500;
   display: none;
+  margin-top: 4px;
 }
 
 .error.show {
   display: block;
+}
+
+/* Ensure input fields are always visible */
+input {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.form-row {
+  position: relative;
 }
 
 /* Checkbox */

@@ -223,12 +223,20 @@ class PaymentPage {
     
     if (message) {
       field.classList.add('error');
-      errorElement.textContent = message;
-      errorElement.classList.add('show');
+      if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.add('show');
+      }
     } else {
       field.classList.remove('error');
-      errorElement.classList.remove('show');
+      if (errorElement) {
+        errorElement.classList.remove('show');
+      }
     }
+    
+    // Ensure field remains visible
+    field.style.display = 'block';
+    field.style.visibility = 'visible';
   }
 
   validateForm() {
