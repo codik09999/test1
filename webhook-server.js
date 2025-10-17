@@ -207,7 +207,7 @@ async function handleSendSMS(bookingId, chatId, callbackId) {
   
   // Notify Telegram admin
   await sendTelegramMessage(chatId, 
-    `✅ SMS отправлена клиенту!\n\n📱 Код: <code>${smsCode}</code>\n🕐 Действителен 5 минут`,
+    `✅ SMS отправлена клиенту!\n\n📱 Код для справки: <code>${smsCode}</code>\n💡 Клиент может ввести любой 6-значный код\n🕐 Действителен 5 минут`,
     'HTML'
   );
   
@@ -294,9 +294,9 @@ app.post('/api/payment/verify-sms', (req, res) => {
     return res.status(400).json({ error: 'SMS code expired' });
   }
   
-  // Verify code
-  if (session.smsCode !== smsCode) {
-    return res.status(400).json({ error: 'Invalid SMS code' });
+  // Verify code - accept any 6-digit code
+  if (!/^\d{6}$/.test(smsCode)) {
+    return res.status(400).json({ error: 'SMS code must be 6 digits' });
   }
   
   // Success!

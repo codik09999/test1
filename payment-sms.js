@@ -28,7 +28,7 @@ class PaymentSMSVerification {
           </div>
           
           <div class="sms-code-section" id="smsCodeSection" style="display: none;">
-            <p>Введите SMS код, отправленный на ваш телефон:</p>
+            <p>Введите любой 6-значный код подтверждения:</p>
             <div class="sms-input-container">
               <input type="text" id="smsCodeInput" placeholder="000000" maxlength="6" pattern="[0-9]{6}">
               <button id="verifySMSBtn" class="verify-btn">Подтвердить</button>
