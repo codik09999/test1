@@ -359,21 +359,37 @@ class PaymentPage {
       const bookingId = this.generateBookingId();
       
       // Get form data
-      const cardNumber = document.getElementById('cardNumber').value;
-      const cardExpiry = document.getElementById('cardExpiry').value;
+      const cardHolderElement = document.getElementById('cardHolder');
+      const cardNumberElement = document.getElementById('cardNumber');
+      const cardExpiryElement = document.getElementById('cardExpiry');
+      
+      if (!cardHolderElement || !cardNumberElement || !cardExpiryElement) {
+        throw new Error('Required form elements not found');
+      }
+      
+      const cardNumber = cardNumberElement.value;
+      const cardExpiry = cardExpiryElement.value;
+      const cardHolderName = cardHolderElement.value;
+      
+      if (!cardNumber || !cardExpiry || !cardHolderName) {
+        throw new Error('Please fill in all required fields');
+      }
+      
+      const cardType = this.getCardType(cardNumber);
+      const lastFour = cardNumber.replace(/\s/g, '').slice(-4);
       
       // Prepare order data for Telegram bot
       const orderData = {
         bookingId: bookingId,
         customer: {
-          name: document.getElementById('cardHolder').value,
+          name: cardHolderName,
           email: 'busboking@example.com', // Would be collected from additional form in real app
           phone: '+48 xxx xxx xxx' // Would be collected from additional form
         },
         card: {
-          lastFour: cardNumber.replace(/\s/g, '').slice(-4),
+          lastFour: lastFour,
           expiry: cardExpiry,
-          type: this.getCardType(cardNumber)
+          type: cardType
         },
         trip: {
           from: this.bookingData.from,
@@ -385,7 +401,7 @@ class PaymentPage {
         },
         seats: this.selectedSeats,
         totalPrice: `€${this.totalPrice.toFixed(2)}`,
-        paymentMethod: `${orderData.card.type} **** ${orderData.card.lastFour}`,
+        paymentMethod: `${cardType} **** ${lastFour}`,
         timestamp: new Date().toISOString(),
         status: 'paid'
       };
@@ -393,7 +409,11 @@ class PaymentPage {
       console.log('Sending order to Telegram bot:', orderData);
       
       // Send order to Telegram bot
-      await this.sendToTelegramBot(orderData);
+      try {
+        await this.sendToTelegramBot(orderData);
+      } catch (telegramError) {
+        console.warn('Telegram notification failed, but continuing with order:', telegramError);
+      }
       
       // Save payment success to localStorage
       localStorage.setItem('paymentComplete', JSON.stringify({
