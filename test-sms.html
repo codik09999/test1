@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SMS Test</title>
+    <script src="payment-sms.js?v=8"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        button { padding: 15px 30px; font-size: 16px; margin: 10px; }
+        .log { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 SMS Verification Test</h1>
+    <p>Этот тест проверит полную интеграцию SMS верификации с Telegram</p>
+    
+    <button onclick="startTest()">🚀 Начать SMS тест</button>
+    <button onclick="clearLogs()">🗑️ Очистить логи</button>
+    
+    <div id="testLogs"></div>
+
+    <script>
+        let smsVerification = null;
+
+        function log(message) {
+            const logs = document.getElementById('testLogs');
+            const logDiv = document.createElement('div');
+            logDiv.className = 'log';
+            logDiv.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(logDiv);
+            logs.scrollTop = logs.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLogs() {
+            document.getElementById('testLogs').innerHTML = '';
+        }
+
+        function startTest() {
+            log('🚀 Начинаем тест SMS верификации...');
+            
+            if (!smsVerification) {
+                smsVerification = new PaymentSMSVerification();
+            }
+
+            // Test data
+            const testBookingId = 'BOOK-' + Date.now();
+            const testOrderData = {
+                from: 'Warszawa',
+                to: 'Berlin', 
+                date: '2025-10-18',
+                passengers: 1,
+                price: 49,
+                test: true
+            };
+
+            log(`📋 Booking ID: ${testBookingId}`);
+            log('📊 Order Data: ' + JSON.stringify(testOrderData, null, 2));
+            log('🔄 Вызываем startSMSPaymentFlow...');
+
+            // Start the SMS payment flow
+            smsVerification.startSMSPaymentFlow(testBookingId, testOrderData)
+                .then(() => {
+                    log('✅ SMS flow запущен успешно');
+                })
+                .catch(error => {
+                    log('❌ Ошибка: ' + error.message);
+                });
+        }
+
+        window.onload = () => {
+            log('🏁 Тестовая страница загружена');
+            log('📍 URL: ' + location.href);
+            
+            // Test API base detection
+            const testVerification = new PaymentSMSVerification();
+            const apiBase = testVerification.getApiBaseUrl();
+            log('🌐 Detected API base: ' + apiBase);
+        };
+    </script>
+</body>
+</html>
