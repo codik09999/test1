@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .log { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffeeee; color: red; }
+        .success { background: #eeffee; color: green; }
+        button { padding: 10px 20px; margin: 5px; font-size: 16px; }
+        input { padding: 10px; margin: 5px; width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 SSE Debug Test</h1>
+    
+    <div>
+        <input type="text" id="bookingIdInput" placeholder="Booking ID (например: BOOK-123)" value="BOOK-TEST">
+        <button onclick="createSession()">1. Создать сессию</button>
+        <button onclick="connectSSE()">2. Подключить SSE</button>
+        <button onclick="clearLogs()">Очистить логи</button>
+    </div>
+    
+    <div id="logs"></div>
+
+    <script>
+        let eventSource = null;
+        let currentBookingId = null;
+
+        function log(message, type = 'log') {
+            const logs = document.getElementById('logs');
+            const logDiv = document.createElement('div');
+            logDiv.className = `log ${type}`;
+            logDiv.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(logDiv);
+            logs.scrollTop = logs.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+
+        function getApiBase() {
+            if (location.protocol === 'file:') {
+                return 'http://localhost:3001';
+            }
+            if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+                return location.origin;
+            }
+            return location.origin;
+        }
+
+        async function createSession() {
+            currentBookingId = document.getElementById('bookingIdInput').value;
+            if (!currentBookingId) {
+                log('❌ Введите Booking ID', 'error');
+                return;
+            }
+
+            const apiBase = getApiBase();
+            log(`🌐 API Base: ${apiBase}`);
+            log(`🔐 Creating session for: ${currentBookingId}`);
+
+            try {
+                const response = await fetch(`${apiBase}/api/payment/create-session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        bookingId: currentBookingId, 
+                        orderData: { test: true, from: 'debug' }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+                }
+
+                const result = await response.json();
+                log(`✅ Session created: ${JSON.stringify(result)}`, 'success');
+                
+            } catch (error) {
+                log(`❌ Session creation failed: ${error.message}`, 'error');
+            }
+        }
+
+        function connectSSE() {
+            if (!currentBookingId) {
+                log('❌ Сначала создайте сессию', 'error');
+                return;
+            }
+
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            const apiBase = getApiBase();
+            const sseUrl = `${apiBase}/api/payment/events/${currentBookingId}`;
+            log(`📡 Connecting to SSE: ${sseUrl}`);
+
+            eventSource = new EventSource(sseUrl);
+
+            eventSource.onopen = (event) => {
+                log('✅ SSE connection opened', 'success');
+            };
+
+            eventSource.onmessage = (event) => {
+                log(`📨 SSE message: ${event.data}`, 'success');
+                try {
+                    const data = JSON.parse(event.data);
+                    log(`📊 Parsed data: ${JSON.stringify(data, null, 2)}`, 'success');
+                } catch (e) {
+                    log(`⚠️ Could not parse SSE data: ${e.message}`, 'error');
+                }
+            };
+
+            eventSource.onerror = (event) => {
+                log(`❌ SSE error: ${JSON.stringify(event)}`, 'error');
+                if (eventSource.readyState === EventSource.CLOSED) {
+                    log('❌ SSE connection closed', 'error');
+                }
+            };
+        }
+
+        // Auto-start on load
+        window.onload = () => {
+            log('🚀 Debug page loaded');
+            log(`🌐 Current location: ${location.href}`);
+            log(`🔗 API Base will be: ${getApiBase()}`);
+        };
+    </script>
+</body>
+</html>

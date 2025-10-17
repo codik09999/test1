@@ -154,11 +154,13 @@ app.post('/webhook', (req, res) => {
   
   // Handle callback queries (button presses)
   if (update.callback_query) {
+    console.log('🔘 Processing callback query:', update.callback_query.data);
     handleCallbackQuery(update.callback_query);
   }
   
   // Handle regular messages
   if (update.message) {
+    console.log('💬 Processing message:', update.message.text);
     handleMessage(update.message);
   }
   
@@ -183,13 +185,17 @@ async function handleCallbackQuery(callbackQuery) {
 
 async function handleSendSMS(bookingId, chatId, callbackId) {
   console.log(`📱 SMS requested for booking ${bookingId}`);
+  console.log(`📋 Current sessions:`, Array.from(paymentSessions.keys()));
   
   // Find the payment session
   const session = paymentSessions.get(bookingId);
   if (!session) {
+    console.log(`❌ Session not found for booking ${bookingId}`);
     await answerCallbackQuery(callbackId, '❌ Session not found');
     return;
   }
+  
+  console.log(`✅ Session found:`, { status: session.status, clients: session.clients.size });
   
   // Generate SMS code
   const smsCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -348,13 +354,19 @@ app.get('/api/payment/events/:bookingId', (req, res) => {
 
 // Helper function to notify all clients for a booking
 function notifyClient(bookingId, data) {
+  console.log(`📡 Notifying clients for booking ${bookingId}:`, data);
   const session = paymentSessions.get(bookingId);
-  if (!session) return;
+  if (!session) {
+    console.log(`❌ No session found for ${bookingId}`);
+    return;
+  }
   
+  console.log(`📁 Clients connected: ${session.clients.size}`);
   const message = `data: ${JSON.stringify(data)}\n\n`;
   
   session.clients.forEach(client => {
     try {
+      console.log(`📤 Sending SSE message to client`);
       client.write(message);
     } catch (error) {
       console.error('Error sending SSE message:', error);
