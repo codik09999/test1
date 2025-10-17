@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test Page</h1>
+    <button onclick="testCreateSession()">Test Create Session</button>
+    <button onclick="testSSE()">Test SSE Connection</button>
+    <div id="results"></div>
+
+    <script>
+        async function testCreateSession() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing create session...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/payment/create-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        bookingId: 'TEST' + Date.now(),
+                        orderData: { test: 'data' }
+                    })
+                });
+                
+                const data = await response.json();
+                results.innerHTML += '<p>✅ Success: ' + JSON.stringify(data) + '</p>';
+                
+                // Test SSE after successful session creation
+                testSSEConnection(data.sessionId);
+                
+            } catch (error) {
+                results.innerHTML += '<p>❌ Error: ' + error.message + '</p>';
+            }
+        }
+        
+        function testSSE() {
+            const bookingId = 'TEST' + Date.now();
+            testSSEConnection(bookingId);
+        }
+        
+        function testSSEConnection(bookingId) {
+            const results = document.getElementById('results');
+            results.innerHTML += '<p>Testing SSE connection for: ' + bookingId + '</p>';
+            
+            const eventSource = new EventSource(`http://localhost:3001/api/payment/events/${bookingId}`);
+            
+            eventSource.onopen = function(event) {
+                results.innerHTML += '<p>✅ SSE Connected</p>';
+            };
+            
+            eventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                results.innerHTML += '<p>📡 SSE Message: ' + JSON.stringify(data) + '</p>';
+            };
+            
+            eventSource.onerror = function(error) {
+                results.innerHTML += '<p>❌ SSE Error: ' + error + '</p>';
+            };
+            
+            // Close after 10 seconds
+            setTimeout(() => {
+                eventSource.close();
+                results.innerHTML += '<p>🔌 SSE Connection closed</p>';
+            }, 10000);
+        }
+    </script>
+</body>
+</html>

@@ -277,14 +277,20 @@ class PaymentSMSVerification {
 
   async startPaymentFlow(bookingId, orderData) {
     console.log('🔐 Starting SMS payment flow for booking:', bookingId);
+    console.log('📊 orderData:', orderData);
     
     this.currentBookingId = bookingId;
     const apiBase = this.getApiBaseUrl();
+    
+    console.log('🌐 API Base URL:', apiBase);
+    console.log('🔗 Full API URL:', `${apiBase}/api/payment/create-session`);
     
     // Show modal
     this.showModal();
     
     try {
+      console.log('🚀 Making fetch request...');
+      
       // Create payment session on server
       const sessionResponse = await fetch(`${apiBase}/api/payment/create-session`, {
         method: 'POST',
@@ -292,16 +298,31 @@ class PaymentSMSVerification {
         body: JSON.stringify({ bookingId, orderData })
       });
       
+      console.log('📡 Fetch response status:', sessionResponse.status);
+      console.log('📡 Fetch response ok:', sessionResponse.ok);
+      
       if (!sessionResponse.ok) {
-        throw new Error('Failed to create payment session');
+        const errorText = await sessionResponse.text();
+        console.error('❌ Session creation failed:', errorText);
+        throw new Error(`Failed to create payment session: ${sessionResponse.status} ${errorText}`);
       }
+      
+      const sessionResult = await sessionResponse.json();
+      console.log('✅ Session created successfully:', sessionResult);
       
       // Connect to Server-Sent Events
       this.connectToEventStream(bookingId);
       
     } catch (error) {
-      console.error('Error starting payment flow:', error);
-      this.showError('Ошибка при создании сессии оплаты');
+      console.error('❌ Error starting payment flow:', error);
+      console.error('🔍 Error stack:', error.stack);
+      
+      // Show detailed error in modal
+      const errorMessage = error.message.includes('Failed to fetch') 
+        ? 'Ошибка подключения к серверу. Проверьте, что webhook сервер запущен.'
+        : `Ошибка: ${error.message}`;
+        
+      this.showError(errorMessage);
     }
   }
 
