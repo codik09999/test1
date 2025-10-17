@@ -2,7 +2,7 @@
 const TELEGRAM_CONFIG = {
   BOT_TOKEN: '7769777050:AAF3xPnqJL8Pr0NgjEp7-2dvI0MpRKyQNQU',
   CHAT_ID: '7121003638',
-  ENABLED: true
+  ENABLED: false // Disabled for testing
 };
 
 class PaymentPage {
@@ -440,11 +440,15 @@ class PaymentPage {
       };
       
       localStorage.setItem('paymentComplete', JSON.stringify(paymentData));
-      console.log('Data saved to localStorage');
+      console.log('Data saved to localStorage:', paymentData);
 
-      console.log('Redirecting to confirmation page...');
-      // Redirect to confirmation page
-      window.location.href = 'confirmation.html';
+      console.log('Payment successful! Redirecting to confirmation page...');
+      alert('Payment successful! Redirecting to confirmation page...');
+      
+      // Small delay to ensure alert is shown
+      setTimeout(() => {
+        window.location.href = 'confirmation.html';
+      }, 1000);
       
     } catch (error) {
       console.error('Payment processing error:', error);
