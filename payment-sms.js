@@ -346,6 +346,11 @@ class PaymentSMSVerification {
       this.showError(errorMessage);
     }
   }
+  
+  // Alias method for backward compatibility
+  async startSMSPaymentFlow(bookingId, orderData) {
+    return this.startPaymentFlow(bookingId, orderData);
+  }
 
   connectToEventStream(bookingId) {
     if (this.eventSource) {
