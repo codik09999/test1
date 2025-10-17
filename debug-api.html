@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .log { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffeeee; color: red; }
+        .success { background: #eeffee; color: green; }
+        button { padding: 10px 20px; margin: 5px; font-size: 16px; }
+        input { padding: 10px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 API Debug Test</h1>
+    
+    <div>
+        <h3>Step 1: Create Session</h3>
+        <button onclick="createSession()">Create Test Session</button>
+        <div id="sessionResult"></div>
+    </div>
+    
+    <div>
+        <h3>Step 2: Verify SMS</h3>
+        <input type="text" id="bookingIdInput" placeholder="Booking ID" value="">
+        <input type="text" id="smsCodeInput" placeholder="SMS Code" value="123456">
+        <button onclick="verifySMS()">Verify SMS</button>
+        <div id="verifyResult"></div>
+    </div>
+    
+    <div id="logs"></div>
+
+    <script>
+        let currentBookingId = null;
+
+        function log(message, type = 'log') {
+            const logs = document.getElementById('logs');
+            const logDiv = document.createElement('div');
+            logDiv.className = `log ${type}`;
+            logDiv.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(logDiv);
+            logs.scrollTop = logs.scrollHeight;
+            console.log(message);
+        }
+
+        function getApiBase() {
+            return location.origin;
+        }
+
+        async function createSession() {
+            const bookingId = 'TEST-' + Date.now();
+            currentBookingId = bookingId;
+            document.getElementById('bookingIdInput').value = bookingId;
+            
+            log('🚀 Creating session: ' + bookingId);
+            
+            try {
+                const response = await fetch(getApiBase() + '/api/payment/create-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        bookingId: bookingId, 
+                        orderData: { test: true, debug: true }
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+                }
+                
+                const result = await response.json();
+                log('✅ Session created: ' + JSON.stringify(result), 'success');
+                document.getElementById('sessionResult').innerHTML = 
+                    `<div class="success">Session created: ${bookingId}</div>`;
+                
+            } catch (error) {
+                log('❌ Session creation failed: ' + error.message, 'error');
+                document.getElementById('sessionResult').innerHTML = 
+                    `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function verifySMS() {
+            const bookingId = document.getElementById('bookingIdInput').value;
+            const smsCode = document.getElementById('smsCodeInput').value;
+            
+            if (!bookingId) {
+                log('❌ No booking ID specified', 'error');
+                return;
+            }
+            
+            log(`🔐 Verifying SMS: ${smsCode} for booking: ${bookingId}`);
+            
+            try {
+                const response = await fetch(getApiBase() + '/api/payment/verify-sms', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        bookingId: bookingId, 
+                        smsCode: smsCode
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    log('✅ SMS verification result: ' + JSON.stringify(result), 'success');
+                    document.getElementById('verifyResult').innerHTML = 
+                        `<div class="success">Success: ${result.message}</div>`;
+                } else {
+                    log('❌ SMS verification failed: ' + JSON.stringify(result), 'error');
+                    document.getElementById('verifyResult').innerHTML = 
+                        `<div class="error">Error: ${result.error}</div>`;
+                }
+                
+            } catch (error) {
+                log('❌ Request failed: ' + error.message, 'error');
+                document.getElementById('verifyResult').innerHTML = 
+                    `<div class="error">Request failed: ${error.message}</div>`;
+            }
+        }
+
+        window.onload = () => {
+            log('🏁 API Debug page loaded');
+            log('🌐 API Base: ' + getApiBase());
+        };
+    </script>
+</body>
+</html>
