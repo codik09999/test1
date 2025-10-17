@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Bot Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            display: block;
+            width: 100%;
+        }
+        .test-btn:hover {
+            background: #1d4ed8;
+        }
+        .log-container {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+        .warning { color: #f59e0b; }
+        
+        .config-info {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🤖 Telegram Bot Integration Test</h1>
+        
+        <div class="config-info">
+            <strong>Current Configuration:</strong><br>
+            BOT_TOKEN: 7808830885:AAHFkGTaOylnQ99RrNolU5UgjEgo2gxFrqo<br>
+            CHAT_ID: 2063086506 ✅
+        </div>
+
+        <button class="test-btn" onclick="testBotInfo()">1. Test Bot Token</button>
+        <button class="test-btn" onclick="testSendMessage()">2. Send Test Message</button>
+        <button class="test-btn" onclick="testChatInfo()">3. Check Chat Info</button>
+        <button class="test-btn" onclick="testFullOrder()">4. Send Order Notification</button>
+        <button class="test-btn" onclick="clearLog()">Clear Log</button>
+
+        <div class="log-container" id="logContainer">
+            <div class="log-entry info">Ready to test Telegram integration...</div>
+        </div>
+    </div>
+
+    <script>
+        const TELEGRAM_CONFIG = {
+            BOT_TOKEN: '7808830885:AAHFkGTaOylnQ99RrNolU5UgjEgo2gxFrqo',
+            CHAT_ID: '2063086506'
+        };
+
+        function log(message, type = 'info') {
+            const container = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('logContainer').innerHTML = '<div class="log-entry info">Log cleared</div>';
+        }
+
+        async function testBotInfo() {
+            log('🤖 Testing bot token...', 'info');
+            
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/getMe`);
+                const result = await response.json();
+                
+                if (result.ok) {
+                    log(`✅ Bot is valid: @${result.result.username} (${result.result.first_name})`, 'success');
+                } else {
+                    log(`❌ Bot error: ${result.description} (Code: ${result.error_code})`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Network error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSendMessage() {
+            log('💬 Sending test message...', 'info');
+            
+            const testMessage = `🧪 Test Message
+
+📅 Time: ${new Date().toLocaleString('ru-RU')}
+🚀 Status: Testing Telegram integration
+💻 Source: Test page`;
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CONFIG.CHAT_ID,
+                        text: testMessage
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    log(`✅ Message sent! ID: ${result.result.message_id}`, 'success');
+                } else {
+                    log(`❌ Failed to send: ${result.description} (Code: ${result.error_code})`, 'error');
+                    
+                    if (result.error_code === 400) {
+                        log('💡 Hint: Check if chat_id is correct or bot is not blocked', 'warning');
+                    } else if (result.error_code === 403) {
+                        log('💡 Hint: Bot was blocked by user or removed from chat', 'warning');
+                    }
+                }
+            } catch (error) {
+                log(`❌ Network error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testChatInfo() {
+            log('🔍 Getting chat info...', 'info');
+            
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/getChat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CONFIG.CHAT_ID
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    const chat = result.result;
+                    log(`✅ Chat found: ${chat.type} - ${chat.title || chat.first_name || 'No name'}`, 'success');
+                    if (chat.username) {
+                        log(`📱 Username: @${chat.username}`, 'info');
+                    }
+                } else {
+                    log(`❌ Chat error: ${result.description} (Code: ${result.error_code})`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Network error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testFullOrder() {
+            log('🚌 Sending full order notification...', 'info');
+            
+            const orderMessage = `🎫 <b>НОВЫЙ ЗАКАЗ БИЛЕТА</b>
+
+┌─── 📋 ДЕТАЛИ ЗАКАЗА ───
+│ ID: <code>BT12345TEST</code>
+│ Статус: ✅ ОПЛАЧЕН
+└─────────────────
+
+┌─── 👤 КЛИЕНТ ───
+│ Имя: <b>Test User</b>
+│ Email: test@example.com
+└─────────────────
+
+┌─── 🚌 ПОЕЗДКА ───
+│ Маршрут: <b>Warszawa</b> ➡️ <b>Berlin</b>
+│ Дата: ${new Date().toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+│ Отправление: <b>20:15</b>
+│ Прибытие: <b>09:25 +1 day</b>
+│ Время в пути: 13h 10m
+└─────────────────
+
+┌─── 🪑 МЕСТА ───
+│ Выбранные места: <b>1A</b>
+│ Количество: 1 мест(а)
+└─────────────────
+
+┌─── 💰 ОПЛАТА ───
+│ Сумма: <b>€76.98</b>
+│ Способ: Visa **** 1234
+└─────────────────
+
+🕐 Заказ оформлен: ${new Date().toLocaleDateString('ru-RU')} в ${new Date().toLocaleTimeString('ru-RU')}
+
+#заказ #автобус #оплачено`;
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CONFIG.CHAT_ID,
+                        text: orderMessage,
+                        parse_mode: 'HTML'
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    log(`✅ Order notification sent! ID: ${result.result.message_id}`, 'success');
+                } else {
+                    log(`❌ Failed to send order: ${result.description} (Code: ${result.error_code})`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Network error: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

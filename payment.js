@@ -1,8 +1,8 @@
 // Telegram Bot Configuration
 const TELEGRAM_CONFIG = {
-  BOT_TOKEN: '7769777050:AAF3xPnqJL8Pr0NgjEp7-2dvI0MpRKyQNQU',
-  CHAT_ID: '7121003638',
-  ENABLED: true // Enabled for testing
+  BOT_TOKEN: '7808830885:AAHFkGTaOylnQ99RrNolU5UgjEgo2gxFrqo',
+  CHAT_ID: '2063086506',
+  ENABLED: true
 };
 
 class PaymentPage {
