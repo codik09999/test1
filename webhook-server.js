@@ -278,14 +278,21 @@ app.post('/api/payment/create-session', (req, res) => {
 app.post('/api/payment/verify-sms', (req, res) => {
   const { bookingId, smsCode } = req.body;
   
+  console.log(`🔐 SMS verification request for ${bookingId}, code: ${smsCode}`);
+  console.log(`📋 Current sessions:`, Array.from(paymentSessions.keys()));
+  
   const session = paymentSessions.get(bookingId);
   if (!session) {
+    console.log(`❌ No session found for ${bookingId}`);
     return res.status(404).json({ error: 'Session not found' });
   }
   
+  console.log(`✅ Session found:`, { status: session.status, smsTimestamp: session.smsTimestamp });
+  
   // Check if SMS was sent
   if (session.status !== 'sms_sent') {
-    return res.status(400).json({ error: 'SMS not sent yet' });
+    console.log(`❌ Invalid session status: ${session.status}, expected: sms_sent`);
+    return res.status(400).json({ error: `SMS not sent yet. Current status: ${session.status}` });
   }
   
   // Check SMS code expiration (5 minutes)
@@ -300,6 +307,7 @@ app.post('/api/payment/verify-sms', (req, res) => {
   }
   
   // Success!
+  console.log(`✅ SMS code verified for ${bookingId}`);
   session.status = 'verified';
   paymentSessions.set(bookingId, session);
   
@@ -309,6 +317,7 @@ app.post('/api/payment/verify-sms', (req, res) => {
     console.log(`🧹 Session ${bookingId} cleaned up`);
   }, 60000); // 1 minute
   
+  console.log(`🎉 Payment verification successful for ${bookingId}`);
   res.json({ 
     success: true, 
     message: 'Payment verified successfully' 
