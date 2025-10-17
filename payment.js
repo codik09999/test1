@@ -426,7 +426,7 @@ class PaymentPage {
         
         // Start SMS verification flow
         if (window.paymentSMS) {
-          console.log('📱 Starting LOCAL SMS payment flow...');
+          console.log('📱 Starting SMS payment flow...');
           
           // Prepare payment data for localStorage (will be saved after SMS verification)
           const paymentData = {
@@ -442,7 +442,7 @@ class PaymentPage {
           // Store payment data temporarily
           localStorage.setItem('pendingPayment', JSON.stringify(paymentData));
           
-          // Start SMS verification flow (LOCAL VERSION)
+          // Start SMS verification flow
           window.paymentSMS.startPaymentFlow(bookingId, orderData);
           
         } else {
@@ -453,25 +453,8 @@ class PaymentPage {
         
       } catch (telegramError) {
         console.error('❌ Telegram notification failed:', telegramError);
-        // For local testing, continue with SMS flow even if Telegram fails
-        if (window.paymentSMS) {
-          console.log('🔄 Telegram failed, but continuing with local SMS flow...');
-          
-          const paymentData = {
-            bookingId: bookingId,
-            seats: this.selectedSeats,
-            route: `${this.bookingData.from} → ${this.bookingData.to}`,
-            date: this.bookingData.date,
-            time: `${this.bookingData.departureTime} - ${this.bookingData.arrivalTime}`,
-            price: `€${this.totalPrice.toFixed(2)}`,
-            timestamp: new Date().toISOString()
-          };
-          
-          localStorage.setItem('pendingPayment', JSON.stringify(paymentData));
-          window.paymentSMS.startPaymentFlow(bookingId, orderData);
-        } else {
-          this.completePaymentDirectly(orderData);
-        }
+        // Continue with direct payment even if Telegram fails
+        this.completePaymentDirectly(orderData);
       }
       
     } catch (error) {
