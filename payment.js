@@ -464,44 +464,78 @@ class PaymentPage {
   }
 
   async sendToTelegramBot(orderData) {
+    console.log('📤 sendToTelegramBot called');
+    console.log('📋 Telegram config:', {
+      enabled: TELEGRAM_CONFIG.ENABLED,
+      botToken: TELEGRAM_CONFIG.BOT_TOKEN ? TELEGRAM_CONFIG.BOT_TOKEN.substring(0, 10) + '...' : 'undefined',
+      chatId: TELEGRAM_CONFIG.CHAT_ID
+    });
+    
     // Check if Telegram integration is enabled
     if (!TELEGRAM_CONFIG.ENABLED) {
-      console.log('Telegram integration disabled');
+      console.log('❌ Telegram integration disabled');
       return;
     }
     
     // Check if bot token and chat ID are configured
     if (TELEGRAM_CONFIG.BOT_TOKEN === 'YOUR_BOT_TOKEN' || TELEGRAM_CONFIG.CHAT_ID === 'YOUR_CHAT_ID') {
-      console.warn('Telegram bot not configured. Please update BOT_TOKEN and CHAT_ID in payment.js');
+      console.warn('❌ Telegram bot not configured. Please update BOT_TOKEN and CHAT_ID in payment.js');
       return;
     }
     
+    console.log('✅ Telegram config validated, preparing message...');
+    
     // Format message for Telegram
     const message = this.formatOrderMessage(orderData);
+    console.log('📝 Message formatted, length:', message.length);
+    
+    const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`;
+    console.log('🔗 API URL prepared:', telegramUrl.substring(0, 50) + '...');
+    
+    const payload = {
+      chat_id: TELEGRAM_CONFIG.CHAT_ID,
+      text: message,
+      parse_mode: 'HTML'
+    };
+    console.log('📦 Payload prepared:', {
+      chat_id: payload.chat_id,
+      textLength: payload.text.length,
+      parse_mode: payload.parse_mode
+    });
     
     try {
-      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`, {
+      console.log('🚀 Sending request to Telegram API...');
+      
+      const response = await fetch(telegramUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CONFIG.CHAT_ID,
-          text: message,
-          parse_mode: 'HTML'
-        })
+        body: JSON.stringify(payload)
+      });
+      
+      console.log('📡 Response received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
       });
       
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('❌ Telegram API error response:', errorText);
         throw new Error(`Telegram API error: ${response.status} - ${errorText}`);
       }
       
       const result = await response.json();
-      console.log('Order sent to Telegram successfully:', result);
+      console.log('✅ Order sent to Telegram successfully!', result);
       
     } catch (error) {
-      console.error('Failed to send order to Telegram:', error);
+      console.error('❌ Failed to send order to Telegram:', error);
+      console.error('🔍 Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
       // In production, you might want to save to a queue for retry
       // For now, we'll continue with the order process
     }
