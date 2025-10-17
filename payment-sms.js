@@ -286,6 +286,12 @@ class PaymentSMSVerification {
       return 'http://localhost:3001';
     }
     
+    // Handle Railway domain - use same origin for API
+    if (window.location.hostname.includes('railway.app') || window.location.hostname.includes('up.railway.app')) {
+      console.log('🚂 Detected Railway domain, using same origin for API');
+      return window.location.origin;
+    }
+    
     // Production - use same origin
     return window.location.origin;
   }

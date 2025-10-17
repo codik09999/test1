@@ -15,6 +15,13 @@ const VERCEL_URL = process.env.VERCEL_URL;
 const getBaseURL = () => {
   if (RAILWAY_STATIC_URL) return `https://${RAILWAY_STATIC_URL}`;
   if (VERCEL_URL) return `https://${VERCEL_URL}`;
+  // Railway provides PUBLIC_DOMAIN env variable
+  if (process.env.PUBLIC_DOMAIN) return `https://${process.env.PUBLIC_DOMAIN}`;
+  // Check for Railway's automatic domain patterns
+  if (process.env.RAILWAY_ENVIRONMENT === 'production') {
+    // Use web-production domain if available
+    return 'https://web-production-a24e.up.railway.app';
+  }
   return 'http://localhost:3001';
 };
 
@@ -26,7 +33,9 @@ const corsOptions = {
   origin: IS_PRODUCTION ? [
     BASE_URL,
     'https://web-production-a24e.up.railway.app',
-    'https://vercel.app'
+    'https://vercel.app',
+    'https://*.up.railway.app',  // Allow all Railway subdomains
+    'https://*.railway.app'
   ] : [
     'http://localhost:3000',
     'http://localhost:3001', 
