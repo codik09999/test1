@@ -426,6 +426,18 @@ async function setupWebhook() {
   if (!IS_PRODUCTION) return;
   
   try {
+    console.log('🧹 Cleaning up any existing webhooks/polling...');
+    
+    // First, delete any existing webhook
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/deleteWebhook`, {
+      method: 'POST'
+    });
+    
+    // Stop any running polling
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/getUpdates?offset=-1&limit=1`, {
+      method: 'POST'
+    });
+    
     console.log('🔄 Setting up Telegram webhook...');
     
     const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/setWebhook`, {

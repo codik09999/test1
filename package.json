@@ -1,6 +1,6 @@
 {
   "name": "busTravel-sms-system",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "BusTravel booking system with SMS verification via Telegram",
   "main": "webhook-server.js",
   "scripts": {
