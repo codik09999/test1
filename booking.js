@@ -21,16 +21,20 @@ class SeatReservation {
     loadBookingData() {
         try {
             const data = localStorage.getItem('bookingData');
+            console.log('Raw localStorage data:', data);
             if (data) {
                 const parsed = JSON.parse(data);
                 console.log('Loaded booking data:', parsed);
                 return parsed;
+            } else {
+                console.log('No booking data found in localStorage');
             }
         } catch (error) {
             console.error('Error loading booking data:', error);
         }
         
         // Default data if none found
+        console.log('Using default booking data');
         return {
             from: 'Warszawa',
             to: 'Berlin',
@@ -45,6 +49,7 @@ class SeatReservation {
 
     init() {
         this.updateRouteInfo();
+        this.updateTripSummary();
         this.generateSeatLayout();
         this.bindEvents();
         this.updateUI();
@@ -63,6 +68,40 @@ class SeatReservation {
         }
         
         console.log('Route info updated:', this.bookingData.from, '->', this.bookingData.to);
+    }
+
+    updateTripSummary() {
+        // Update trip summary card with booking data
+        const routeTimeFrom = document.querySelector('.route-time');
+        const routeCityFrom = document.querySelector('.route-city.from-city');
+        const routeStationFrom = document.querySelector('.route-station');
+        
+        // Update departure information
+        if (routeTimeFrom && this.bookingData.departureTime) {
+            routeTimeFrom.textContent = this.bookingData.departureTime;
+        }
+        if (routeCityFrom && this.bookingData.from) {
+            routeCityFrom.textContent = this.bookingData.from;
+        }
+        
+        // Update arrival information  
+        const routeTimeTo = document.querySelectorAll('.route-time')[1];
+        const routeCityTo = document.querySelector('.route-city.to-city');
+        
+        if (routeTimeTo && this.bookingData.arrivalTime) {
+            routeTimeTo.innerHTML = this.bookingData.arrivalTime;
+        }
+        if (routeCityTo && this.bookingData.to) {
+            routeCityTo.textContent = this.bookingData.to;
+        }
+        
+        // Update duration
+        const durationElement = document.querySelector('.duration');
+        if (durationElement && this.bookingData.duration) {
+            durationElement.textContent = this.bookingData.duration;
+        }
+        
+        console.log('Trip summary updated with data:', this.bookingData);
     }
 
     generateSeatLayout() {
