@@ -421,11 +421,8 @@ class PaymentPage {
       console.log('Simulating payment processing...');
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Send order to Telegram bot (non-blocking)
-      console.log('Sending to Telegram...');
-      this.sendToTelegramBot(orderData).catch(telegramError => {
-        console.warn('Telegram notification failed:', telegramError);
-      });
+      // Skip Telegram integration (disabled)
+      console.log('Telegram integration disabled');
       
       console.log('Saving to localStorage...');
       // Save payment success to localStorage
