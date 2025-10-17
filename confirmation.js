@@ -6,10 +6,24 @@ class ConfirmationPage {
 
   loadPaymentData() {
     try {
-      const data = localStorage.getItem('paymentComplete');
-      if (data) {
+      // First try to get completed payment
+      let data = localStorage.getItem('paymentComplete');
+      
+      // If no completed payment, check for pending payment (SMS verified)
+      if (!data) {
+        data = localStorage.getItem('pendingPayment');
+        if (data) {
+          // Move from pending to complete
+          const paymentData = JSON.parse(data);
+          localStorage.setItem('paymentComplete', data);
+          localStorage.removeItem('pendingPayment');
+          console.log('💳 Payment completed via SMS verification');
+          return paymentData;
+        }
+      } else {
         return JSON.parse(data);
       }
+      
     } catch (error) {
       console.error('Error loading payment data:', error);
     }

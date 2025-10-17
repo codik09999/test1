@@ -1,18 +1,20 @@
 {
-  "name": "order-system",
-  "version": "1.0.0",
-  "description": "Order system with Telegram bot integration",
-  "main": "server.js",
+  "name": "busTravel-sms-system",
+  "version": "2.0.0",
+  "description": "BusTravel booking system with SMS verification via Telegram",
+  "main": "webhook-server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node webhook-server.js",
+    "dev": "nodemon webhook-server.js",
+    "build": "echo 'No build step required'"
   },
   "dependencies": {
     "express": "^4.18.2",
     "socket.io": "^4.7.2",
     "node-telegram-bot-api": "^0.64.0",
     "dotenv": "^16.3.1",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

