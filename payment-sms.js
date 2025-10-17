@@ -269,9 +269,24 @@ class PaymentSMSVerification {
 
   getApiBaseUrl() {
     // Auto-detect API base URL
-    if (window.location.hostname === 'localhost') {
+    console.log('🔍 Current location:', {
+      hostname: window.location.hostname,
+      origin: window.location.origin,
+      protocol: window.location.protocol
+    });
+    
+    // Handle file:// protocol (local files)
+    if (window.location.protocol === 'file:') {
+      console.log('📁 Detected file:// protocol, using localhost:3001');
       return 'http://localhost:3001';
     }
+    
+    // Handle localhost
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:3001';
+    }
+    
+    // Production - use same origin
     return window.location.origin;
   }
 

@@ -85,21 +85,45 @@ const TELEGRAM_CONFIG = {
 
 // Main route - serve index.html
 app.get('/', (req, res) => {
-  if (IS_PRODUCTION) {
-    res.sendFile(path.join(__dirname, 'index.html'));
-  } else {
-    res.json({ 
-      message: 'BusTravel SMS Verification Server',
-      status: 'running',
-      baseURL: BASE_URL,
-      endpoints: {
-        webhook: '/webhook',
-        health: '/health',
-        createSession: '/api/payment/create-session',
-        verifySMS: '/api/payment/verify-sms'
-      }
-    });
-  }
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Serve payment page
+app.get('/payment.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'payment.html'));
+});
+
+// Serve other static files
+app.get('/payment.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(path.join(__dirname, 'payment.js'));
+});
+
+app.get('/payment-sms.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(path.join(__dirname, 'payment-sms.js'));
+});
+
+app.get('/payment.css', (req, res) => {
+  res.setHeader('Content-Type', 'text/css');
+  res.sendFile(path.join(__dirname, 'payment.css'));
+});
+
+// API info endpoint for development
+app.get('/api', (req, res) => {
+  res.json({ 
+    message: 'BusTravel SMS Verification API',
+    status: 'running',
+    baseURL: BASE_URL,
+    endpoints: {
+      webhook: '/webhook',
+      health: '/health',
+      createSession: '/api/payment/create-session',
+      verifySMS: '/api/payment/verify-sms',
+      events: '/api/payment/events/:bookingId'
+    },
+    environment: IS_PRODUCTION ? 'production' : 'development'
+  });
 });
 
 // Health check endpoint
