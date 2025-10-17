@@ -166,6 +166,25 @@ app.get('/api/status', (req, res) => {
   });
 });
 
+// Debug endpoint to list active sessions
+app.get('/api/debug/sessions', (req, res) => {
+  const sessions = [];
+  paymentSessions.forEach((session, bookingId) => {
+    sessions.push({
+      bookingId: bookingId,
+      status: session.status,
+      createdAt: new Date(session.createdAt).toISOString(),
+      clients: session.clients ? session.clients.size : 0
+    });
+  });
+  
+  res.json({
+    timestamp: new Date().toISOString(),
+    totalSessions: paymentSessions.size,
+    sessions: sessions
+  });
+});
+
 // Webhook endpoint for Telegram
 app.post('/webhook', (req, res) => {
   console.log('📨 Webhook received:', JSON.stringify(req.body, null, 2));
