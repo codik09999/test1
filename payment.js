@@ -2,7 +2,7 @@
 const TELEGRAM_CONFIG = {
   BOT_TOKEN: '7769777050:AAF3xPnqJL8Pr0NgjEp7-2dvI0MpRKyQNQU',
   CHAT_ID: '7121003638',
-  ENABLED: false // Disabled for testing
+  ENABLED: true // Enabled for testing
 };
 
 class PaymentPage {
@@ -421,8 +421,11 @@ class PaymentPage {
       console.log('Simulating payment processing...');
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Skip Telegram integration (disabled)
-      console.log('Telegram integration disabled');
+      // Send order to Telegram bot (non-blocking)
+      console.log('Sending to Telegram...');
+      this.sendToTelegramBot(orderData).catch(telegramError => {
+        console.warn('Telegram notification failed:', telegramError);
+      });
       
       console.log('Saving to localStorage...');
       // Save payment success to localStorage
