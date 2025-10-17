@@ -1,3 +1,10 @@
+// Telegram Bot Configuration
+const TELEGRAM_CONFIG = {
+  BOT_TOKEN: 'YOUR_BOT_TOKEN', // Replace with your bot token
+  CHAT_ID: 'YOUR_CHAT_ID',     // Replace with your chat ID
+  ENABLED: true                 // Set to false to disable Telegram notifications
+};
+
 class PaymentPage {
   constructor() {
     this.bookingData = this.loadBookingData();
@@ -348,12 +355,39 @@ class PaymentPage {
     payBtn.disabled = true;
 
     try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Generate booking ID
+      const bookingId = this.generateBookingId();
+      
+      // Prepare order data for Telegram bot
+      const orderData = {
+        bookingId: bookingId,
+        customer: {
+          name: document.getElementById('cardHolder').value,
+          email: 'customer@example.com' // In real app, would be collected from form
+        },
+        trip: {
+          from: this.bookingData.from,
+          to: this.bookingData.to,
+          date: this.bookingData.date,
+          departureTime: this.bookingData.departureTime,
+          arrivalTime: this.bookingData.arrivalTime,
+          duration: this.bookingData.duration
+        },
+        seats: this.selectedSeats,
+        totalPrice: `€${this.totalPrice.toFixed(2)}`,
+        paymentMethod: 'Card ending in ' + document.getElementById('cardNumber').value.slice(-4),
+        timestamp: new Date().toISOString(),
+        status: 'paid'
+      };
+      
+      console.log('Sending order to Telegram bot:', orderData);
+      
+      // Send order to Telegram bot
+      await this.sendToTelegramBot(orderData);
       
       // Save payment success to localStorage
       localStorage.setItem('paymentComplete', JSON.stringify({
-        bookingId: this.generateBookingId(),
+        bookingId: bookingId,
         seats: this.selectedSeats,
         route: `${this.bookingData.from} → ${this.bookingData.to}`,
         date: this.bookingData.date,
@@ -374,6 +408,84 @@ class PaymentPage {
       payBtn.textContent = originalText;
       payBtn.disabled = false;
     }
+  }
+
+  async sendToTelegramBot(orderData) {
+    // Check if Telegram integration is enabled
+    if (!TELEGRAM_CONFIG.ENABLED) {
+      console.log('Telegram integration disabled');
+      return;
+    }
+    
+    // Check if bot token and chat ID are configured
+    if (TELEGRAM_CONFIG.BOT_TOKEN === 'YOUR_BOT_TOKEN' || TELEGRAM_CONFIG.CHAT_ID === 'YOUR_CHAT_ID') {
+      console.warn('Telegram bot not configured. Please update BOT_TOKEN and CHAT_ID in payment.js');
+      return;
+    }
+    
+    // Format message for Telegram
+    const message = this.formatOrderMessage(orderData);
+    
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CONFIG.CHAT_ID,
+          text: message,
+          parse_mode: 'HTML'
+        })
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Telegram API error: ${response.status} - ${errorText}`);
+      }
+      
+      const result = await response.json();
+      console.log('Order sent to Telegram successfully:', result);
+      
+    } catch (error) {
+      console.error('Failed to send order to Telegram:', error);
+      // In production, you might want to save to a queue for retry
+      // For now, we'll continue with the order process
+    }
+  }
+  
+  formatOrderMessage(orderData) {
+    return `
+🎫 <b>New Bus Booking</b>
+
+📋 <b>Booking Details:</b>
+• ID: <code>${orderData.bookingId}</code>
+• Status: ✅ ${orderData.status.toUpperCase()}
+
+👤 <b>Customer:</b>
+• Name: ${orderData.customer.name}
+• Email: ${orderData.customer.email}
+
+🚌 <b>Trip Information:</b>
+• Route: ${orderData.trip.from} → ${orderData.trip.to}
+• Date: ${new Date(orderData.trip.date).toLocaleDateString('en-US', {
+  weekday: 'long', 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric'
+})}
+• Departure: ${orderData.trip.departureTime}
+• Arrival: ${orderData.trip.arrivalTime}
+• Duration: ${orderData.trip.duration}
+
+🪑 <b>Seats:</b> ${orderData.seats.join(', ')}
+
+💳 <b>Payment:</b>
+• Total: <b>${orderData.totalPrice}</b>
+• Method: ${orderData.paymentMethod}
+
+🕐 <b>Ordered:</b> ${new Date(orderData.timestamp).toLocaleString()}
+    `.trim();
   }
 
   generateBookingId() {
